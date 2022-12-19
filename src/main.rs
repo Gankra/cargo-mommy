@@ -5,7 +5,6 @@ fn main() -> Result<ExitCode, Box<dyn std::error::Error>> {
     let mommys_little = std::env::var("CARGO_MOMMYS_LITTLE").unwrap_or_else(|_| "girl".to_owned());
     let mut arg_iter = std::env::args();
     let _cargo = arg_iter.next();
-    let _mommy = arg_iter.next();
 
     let mut cmd = std::process::Command::new(cargo);
     cmd.args(arg_iter);
