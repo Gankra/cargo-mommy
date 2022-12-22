@@ -1,6 +1,5 @@
 use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
 use serde::Deserialize;
-use std::process::ExitCode;
 
 const RESPONSES: &str = include_str!("../responses.json");
 const AFFECTIONATE_TERM_PLACEHOLDER: &str = "AFFECTIONATE_TERM";
@@ -16,7 +15,17 @@ enum ResponseType {
     Negative,
 }
 
-fn main() -> Result<ExitCode, Box<dyn std::error::Error>> {
+fn main() {
+    // Ideally mommy would use ExitCode but that's pretty new and mommy wants
+    // to support more little ones~
+    let code = real_main().unwrap_or_else(|e| {
+        eprintln!("Error: {:?}", e);
+        -1
+    });
+    std::process::exit(code)
+}
+
+fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_owned());
     let mut arg_iter = std::env::args();
     let _cargo = arg_iter.next();
@@ -32,7 +41,7 @@ fn main() -> Result<ExitCode, Box<dyn std::error::Error>> {
         eprintln!("{}", select_response(ResponseType::Negative));
     }
     eprintln!("\x1b[0m");
-    Ok(ExitCode::from(status.code().unwrap_or(-1) as u8))
+    Ok(status.code().unwrap_or(-1))
 }
 
 fn select_response(response_type: ResponseType) -> String {
