@@ -2,8 +2,8 @@ use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
 use serde::Deserialize;
 use std::process::ExitCode;
 
-const RESPONSES: &'static str = include_str!("../responses.json");
-const AFFECTIONATE_TERM_PLACEHOLDER: &'static str = "AFFECTIONATE_TERM";
+const RESPONSES: &str = include_str!("../responses.json");
+const AFFECTIONATE_TERM_PLACEHOLDER: &str = "AFFECTIONATE_TERM";
 
 #[derive(Deserialize)]
 struct Responses {
@@ -17,7 +17,7 @@ enum ResponseType {
 }
 
 fn main() -> Result<ExitCode, Box<dyn std::error::Error>> {
-    let cargo = std::env::var("CARGO")?;
+    let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_owned());
     let mut arg_iter = std::env::args();
     let _cargo = arg_iter.next();
     let _mommy = arg_iter.next();
@@ -53,5 +53,6 @@ fn select_response(response_type: ResponseType) -> String {
 #[cfg(test)]
 #[test]
 fn test() {
-    panic!("oops!!");
+    // Uncomment if you want a failing test
+    // panic!("oops!!");
 }
