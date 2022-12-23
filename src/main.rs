@@ -1,6 +1,6 @@
 #![allow(clippy::let_and_return)]
 
-use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
+use fastrand::Rng;
 use serde::Deserialize;
 
 const RESPONSES: &str = include_str!("../responses.json");
@@ -57,7 +57,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 }
 
 fn select_response(response_type: ResponseType) -> String {
-    let mut rng = StdRng::from_entropy();
+    let rng = Rng::new();
 
     // Get mommy's options~
     let affectionate_terms = parse_options(AFFECTIONATE_TERMS_ENV_VAR, AFFECTIONATE_TERMS_DEFAULT);
@@ -67,27 +67,26 @@ fn select_response(response_type: ResponseType) -> String {
     // Choose what mommy will say~
     let responses: Responses = serde_json::from_str(RESPONSES).expect("RESPONSES to be valid JSON");
 
-    let response = match response_type {
+    let responses = match response_type {
         ResponseType::Positive => &responses.positive,
         ResponseType::Negative => &responses.negative,
-    }
-    .choose(&mut rng)
-    .expect("non-zero amount of responses");
+    };
+    let response = &responses[rng.usize(..responses.len())];
 
     // Apply options to the message template~
     let response = apply_template(
         response,
         AFFECTIONATE_TERM_PLACEHOLDER,
         &affectionate_terms,
-        &mut rng,
+        &rng,
     );
     let response = apply_template(
         &response,
         MOMMYS_PRONOUN_PLACEHOLDER,
         &mommys_pronouns,
-        &mut rng,
+        &rng,
     );
-    let response = apply_template(&response, MOMMYS_ROLE_PLACEHOLDER, &mommys_roles, &mut rng);
+    let response = apply_template(&response, MOMMYS_ROLE_PLACEHOLDER, &mommys_roles, &rng);
 
     // Done~!
     response
@@ -101,12 +100,12 @@ fn parse_options(env_var: &str, default: &str) -> Vec<String> {
         .collect()
 }
 
-fn apply_template(input: &str, template_key: &str, options: &[String], rng: &mut StdRng) -> String {
+fn apply_template(input: &str, template_key: &str, options: &[String], rng: &Rng) -> String {
     let mut last_position = 0;
     let mut output = String::new();
     for (index, matched) in input.match_indices(template_key) {
         output.push_str(&input[last_position..index]);
-        output.push_str(options.choose(rng).unwrap());
+        output.push_str(&options[rng.usize(..options.len())]);
         last_position = index + matched.len();
     }
     output.push_str(&input[last_position..]);
