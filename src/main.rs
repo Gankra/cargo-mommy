@@ -1,6 +1,6 @@
 #![allow(clippy::let_and_return)]
 
-use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
+use fastrand::Rng;
 
 include!(concat!(env!("OUT_DIR"), "/responses.rs"));
 
@@ -71,7 +71,7 @@ fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
 }
 
 fn select_response(response_type: ResponseType) -> String {
-    let mut rng = StdRng::from_entropy();
+    let rng = Rng::new();
 
     // Get mommy's options~
     let affectionate_terms = parse_options(AFFECTIONATE_TERMS_ENV_VAR, AFFECTIONATE_TERMS_DEFAULT);
@@ -79,27 +79,26 @@ fn select_response(response_type: ResponseType) -> String {
     let mommys_roles = parse_options(MOMMYS_ROLES_ENV_VAR, MOMMYS_ROLES_DEFAULT);
 
     // Choose what mommy will say~
-    let response = match response_type {
+    let responses = match response_type {
         ResponseType::Positive => POSITIVE_RESPONSES,
         ResponseType::Negative => NEGATIVE_RESPONSES,
-    }
-    .choose(&mut rng)
-    .expect("non-zero amount of responses");
+    };
+    let response = &responses[rng.usize(..responses.len())];
 
     // Apply options to the message template~
     let response = apply_template(
         response,
         AFFECTIONATE_TERM_PLACEHOLDER,
         &affectionate_terms,
-        &mut rng,
+        &rng,
     );
     let response = apply_template(
         &response,
         MOMMYS_PRONOUN_PLACEHOLDER,
         &mommys_pronouns,
-        &mut rng,
+        &rng,
     );
-    let response = apply_template(&response, MOMMYS_ROLE_PLACEHOLDER, &mommys_roles, &mut rng);
+    let response = apply_template(&response, MOMMYS_ROLE_PLACEHOLDER, &mommys_roles, &rng);
 
     // Done~!
     response
@@ -113,12 +112,12 @@ fn parse_options(env_var: &str, default: &str) -> Vec<String> {
         .collect()
 }
 
-fn apply_template(input: &str, template_key: &str, options: &[String], rng: &mut StdRng) -> String {
+fn apply_template(input: &str, template_key: &str, options: &[String], rng: &Rng) -> String {
     let mut last_position = 0;
     let mut output = String::new();
     for (index, matched) in input.match_indices(template_key) {
         output.push_str(&input[last_position..index]);
-        output.push_str(options.choose(rng).unwrap());
+        output.push_str(&options[rng.usize(..options.len())]);
         last_position = index + matched.len();
     }
     output.push_str(&input[last_position..]);

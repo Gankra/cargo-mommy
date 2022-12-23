@@ -9,7 +9,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = { version = "0.8.5" }
+fastrand = "1.8.0"
 
 [build-dependencies]
 serde = { version = "1.0.151", features = ["derive"] }
