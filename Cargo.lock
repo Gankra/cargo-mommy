@@ -16,6 +16,7 @@ dependencies = [
  "dirs",
  "rand",
  "serde",
+ "toml",
 ]
 
 [[package]]

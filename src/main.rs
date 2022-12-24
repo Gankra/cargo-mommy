@@ -54,7 +54,7 @@ fn select_response(response_type: ResponseType) -> String {
     let mommys_roles = parse_options(config.roles);
 
     // Choose what mommy will say~
-    let responses: Responses = config.responses;
+    let responses: Responses = config.responses.unwrap_or_default();
 
     let response = match response_type {
         ResponseType::Positive => &responses.positive,

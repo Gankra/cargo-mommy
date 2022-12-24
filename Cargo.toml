@@ -13,3 +13,4 @@ confique = { version = "0.2", default-features = false, features = ["toml"]}
 dirs = "4"
 rand = "0.8.5"
 serde = { version = "1.0.151", features = ["derive"] }
+toml = "0.5"
