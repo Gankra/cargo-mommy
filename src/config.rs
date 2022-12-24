@@ -17,8 +17,8 @@ pub fn load_config() -> Result<MommyConfiguration, confique::Error> {
 
 #[derive(Debug, Deserialize)]
 pub struct Responses {
-    pub positive: Vec<String>,
-    pub negative: Vec<String>,
+    pub positive: Option<Vec<String>>,
+    pub negative: Option<Vec<String>>,
 }
 impl Default for Responses {
     fn default() -> Self {

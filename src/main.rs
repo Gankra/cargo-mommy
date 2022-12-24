@@ -56,12 +56,14 @@ fn select_response(response_type: ResponseType) -> String {
     // Choose what mommy will say~
     let responses: Responses = config.responses.unwrap_or_default();
 
-    let response = match response_type {
-        ResponseType::Positive => &responses.positive,
-        ResponseType::Negative => &responses.negative,
+    let responses_binding = match response_type {
+        ResponseType::Positive => responses.positive,
+        ResponseType::Negative => responses.negative,
     }
-    .choose(&mut rng)
-    .expect("non-zero amount of responses");
+    .unwrap();
+    let response = responses_binding
+        .choose(&mut rng)
+        .expect("non-zero amount of responses");
 
     // Apply options to the message template~
     let response = apply_template(

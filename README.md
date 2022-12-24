@@ -70,7 +70,7 @@ For example, the phrase "mommy loves her little girl~ ❤️" is "`roles` loves 
 So if your configs are like the example below:
 ```toml
 # config.toml
-responses = { positive = [], negative = [] }
+responses = { positive = [], negative = [] } # lets say defaults from responses.toml~
 
 affectionate_terms = "boy/pet/baby"
 pronouns = "his/their"
