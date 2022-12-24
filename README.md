@@ -44,17 +44,40 @@ mommy knows her little girl can do better~ ❤️
 
 # Configuration
 
-Mommy will read the following environment variables to make her messages better for you~ ❤️
+Mommy will read the following the configuration file and environment variables to make her messages better for you~ ❤️
 
-* `CARGO_MOMMYS_LITTLE` - what to call you~ (default: "girl")
-* `CARGO_MOMMYS_PRONOUNS` - what pronouns mommy will use for themself~ (default: "her")
-* `CARGO_MOMMYS_ROLES` - what role mommy will have~ (default "mommy")
+## Configuration files
+
+### Configuration files folder
+
+| Platform | Path                                     |
+| -------- | ---------------------------------------- |
+| Linux    | /home/mommy/.config                      |
+| macOS    | /Users/Mommy/Library/Application Support |
+| Windows  | C:\Users\Mommy\AppData\Roaming           |
+
+### Configuration keys / environment variables
+
+* `responses` - custom positive and negative responses~ (default: [responses.toml](responses.toml))
+* `affectionate_terms` / `CARGO_MOMMYS_LITTLE` - what to call you~ (default: "girl")
+* `pronouns` / `CARGO_MOMMYS_PRONOUNS` - what pronouns mommy will use for themself~ (default: "her")
+* `roles` / `CARGO_MOMMYS_ROLES` - what role mommy will have~ (default "mommy")
 
 All of these options can take a `/` separated list. Mommy will randomly select one of them whenever she talks to you~
 
-For example, the phrase "mommy loves her little girl~ ❤️" is "CARGO_MOMMYS_ROLE loves CARGO_MOMMYS_PRONOUNS little CARGO_MOMMYS_LITTLE~ ❤️"
+For example, the phrase "mommy loves her little girl~ ❤️" is "`roles` loves `pronouns` little `affectionate_terms`~ ❤️"
 
-So if you set `CARGO_MOMMYS_ROLES="daddy"`, `CARGO_MOMMYS_PRONOUNS="his/their"`, and `CARGO_MOMMYS_LITTLE="boy/pet/baby"` then you might get any of
+So if your configs are like the example below:
+```toml
+# config.toml
+responses = { positive = [], negative = [] } # lets say defaults from responses.toml~
+
+affectionate_terms = "boy/pet/baby"
+pronouns = "his/their"
+roles = "daddy"
+```
+
+you might get any of:
 
 * daddy loves their little boy~ ❤️
 * daddy loves his little pet~ ❤️
@@ -62,3 +85,17 @@ So if you set `CARGO_MOMMYS_ROLES="daddy"`, `CARGO_MOMMYS_PRONOUNS="his/their"`,
 
 And so on~ ❤️
 
+## Response placeholders
+
+You can create custom responses and add placeholders anywhere you want~
+
+* `AFFECTIONATE_TERM` - will be replaced with `affectionate term`~ (example: boy/pet/baby)
+* `MOMMYS_PRONOUN` - will be replaced with `pronouns`~ (example: his/their)
+* `MOMMYS_ROLE` - will be replaced with `roles`~ (example: daddy)
+
+So if your positive responses are `MOMMYS_ROLE loved MOMMYS_PRONOUN AFFECTIONATE_TERM's work~` and `MOMMYS_ROLE says MOMMYS_PRONOUN AFFECTIONATE_TERM did a well job~!`, you might get any of:
+
+* daddy loved their pet's work~
+* daddy says his baby did a well job~!
+
+And so on~ ❤️

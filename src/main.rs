@@ -1,26 +1,13 @@
 #![allow(clippy::let_and_return)]
 
 use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
-use serde::Deserialize;
 
-const RESPONSES: &str = include_str!("../responses.json");
+mod config;
+use config::{load_config, Responses};
+
 const AFFECTIONATE_TERM_PLACEHOLDER: &str = "AFFECTIONATE_TERM";
 const MOMMYS_PRONOUN_PLACEHOLDER: &str = "MOMMYS_PRONOUN";
 const MOMMYS_ROLE_PLACEHOLDER: &str = "MOMMYS_ROLE";
-
-const AFFECTIONATE_TERMS_ENV_VAR: &str = "CARGO_MOMMYS_LITTLE";
-const MOMMYS_PRONOUNS_ENV_VAR: &str = "CARGO_MOMMYS_PRONOUNS";
-const MOMMYS_ROLES_ENV_VAR: &str = "CARGO_MOMMYS_ROLES";
-
-const AFFECTIONATE_TERMS_DEFAULT: &str = "girl";
-const MOMMYS_PRONOUNS_DEFAULT: &str = "her";
-const MOMMYS_ROLES_DEFAULT: &str = "mommy";
-
-#[derive(Deserialize)]
-struct Responses {
-    positive: Vec<String>,
-    negative: Vec<String>,
-}
 
 enum ResponseType {
     Positive,
@@ -57,22 +44,26 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 }
 
 fn select_response(response_type: ResponseType) -> String {
+    let config = load_config().unwrap();
+
     let mut rng = StdRng::from_entropy();
 
     // Get mommy's options~
-    let affectionate_terms = parse_options(AFFECTIONATE_TERMS_ENV_VAR, AFFECTIONATE_TERMS_DEFAULT);
-    let mommys_pronouns = parse_options(MOMMYS_PRONOUNS_ENV_VAR, MOMMYS_PRONOUNS_DEFAULT);
-    let mommys_roles = parse_options(MOMMYS_ROLES_ENV_VAR, MOMMYS_ROLES_DEFAULT);
+    let affectionate_terms = parse_options(config.affectionate_terms);
+    let mommys_pronouns = parse_options(config.pronouns);
+    let mommys_roles = parse_options(config.roles);
 
     // Choose what mommy will say~
-    let responses: Responses = serde_json::from_str(RESPONSES).expect("RESPONSES to be valid JSON");
+    let responses: Responses = config.responses.unwrap_or_default();
 
-    let response = match response_type {
-        ResponseType::Positive => &responses.positive,
-        ResponseType::Negative => &responses.negative,
+    let responses_binding = match response_type {
+        ResponseType::Positive => responses.positive,
+        ResponseType::Negative => responses.negative,
     }
-    .choose(&mut rng)
-    .expect("non-zero amount of responses");
+    .unwrap();
+    let response = responses_binding
+        .choose(&mut rng)
+        .expect("non-zero amount of responses");
 
     // Apply options to the message template~
     let response = apply_template(
@@ -93,12 +84,8 @@ fn select_response(response_type: ResponseType) -> String {
     response
 }
 
-fn parse_options(env_var: &str, default: &str) -> Vec<String> {
-    std::env::var(env_var)
-        .unwrap_or_else(|_| default.to_owned())
-        .split('/')
-        .map(|s| s.to_owned())
-        .collect()
+fn parse_options(input: String) -> Vec<String> {
+    input.split('/').map(|s| s.to_string()).collect()
 }
 
 fn apply_template(input: &str, template_key: &str, options: &[String], rng: &mut StdRng) -> String {
