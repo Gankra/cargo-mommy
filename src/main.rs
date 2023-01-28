@@ -1,9 +1,9 @@
 #![allow(clippy::let_and_return)]
 
 use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
-use serde::Deserialize;
 
-const RESPONSES: &str = include_str!("../responses.json");
+include!(concat!(env!("OUT_DIR"), "/responses.rs"));
+
 const AFFECTIONATE_TERM_PLACEHOLDER: &str = "AFFECTIONATE_TERM";
 const MOMMYS_PRONOUN_PLACEHOLDER: &str = "MOMMYS_PRONOUN";
 const MOMMYS_ROLE_PLACEHOLDER: &str = "MOMMYS_ROLE";
@@ -15,12 +15,6 @@ const MOMMYS_ROLES_ENV_VAR: &str = "CARGO_MOMMYS_ROLES";
 const AFFECTIONATE_TERMS_DEFAULT: &str = "girl";
 const MOMMYS_PRONOUNS_DEFAULT: &str = "her";
 const MOMMYS_ROLES_DEFAULT: &str = "mommy";
-
-#[derive(Deserialize)]
-struct Responses {
-    positive: Vec<String>,
-    negative: Vec<String>,
-}
 
 enum ResponseType {
     Positive,
@@ -85,11 +79,9 @@ fn select_response(response_type: ResponseType) -> String {
     let mommys_roles = parse_options(MOMMYS_ROLES_ENV_VAR, MOMMYS_ROLES_DEFAULT);
 
     // Choose what mommy will say~
-    let responses: Responses = serde_json::from_str(RESPONSES).expect("RESPONSES to be valid JSON");
-
     let response = match response_type {
-        ResponseType::Positive => &responses.positive,
-        ResponseType::Negative => &responses.negative,
+        ResponseType::Positive => &POSITIVE_RESPONSES,
+        ResponseType::Negative => &NEGATIVE_RESPONSES,
     }
     .choose(&mut rng)
     .expect("non-zero amount of responses");
