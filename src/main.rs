@@ -80,8 +80,8 @@ fn select_response(response_type: ResponseType) -> String {
 
     // Choose what mommy will say~
     let response = match response_type {
-        ResponseType::Positive => &POSITIVE_RESPONSES,
-        ResponseType::Negative => &NEGATIVE_RESPONSES,
+        ResponseType::Positive => POSITIVE_RESPONSES,
+        ResponseType::Negative => NEGATIVE_RESPONSES,
     }
     .choose(&mut rng)
     .expect("non-zero amount of responses");
