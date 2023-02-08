@@ -48,6 +48,10 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let mut cmd = std::process::Command::new(cargo);
     cmd.args(arg_iter);
     let status = cmd.status()?;
+    let code = status.code().unwrap_or(-1);
+    if is_quiet_mode_enabled(cmd.get_args()) {
+        return Ok(code);
+    }
     eprintln!("\x1b[1m");
     if status.success() {
         eprintln!("{}", select_response(ResponseType::Positive))
@@ -55,7 +59,21 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         eprintln!("{}", select_response(ResponseType::Negative));
     }
     eprintln!("\x1b[0m");
-    Ok(status.code().unwrap_or(-1))
+    Ok(code)
+}
+
+fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
+    for arg in args.filter_map(std::ffi::OsStr::to_str) {
+        match arg.as_bytes() {
+            b"--" => break,
+            b"--quiet" => return true,
+            [b'-', b'-', ..] => {}
+            [b'-', args @ ..] if args.contains(&b'q') => return true,
+            _ => {}
+        }
+    }
+
+    false
 }
 
 fn select_response(response_type: ResponseType) -> String {
