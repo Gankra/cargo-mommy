@@ -39,9 +39,11 @@ fn main() {
 
 fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_owned());
-    let mut arg_iter = std::env::args();
+    let mut arg_iter = std::env::args().peekable();
     let _cargo = arg_iter.next();
-    let _mommy = arg_iter.next();
+    if arg_iter.peek().map_or(false, |arg| arg == "mommy") {
+        let _mommy = arg_iter.next();
+    }
 
     let mut cmd = std::process::Command::new(cargo);
     cmd.args(arg_iter);
