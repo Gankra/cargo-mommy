@@ -42,6 +42,9 @@ mommy knows her little girl can do better~ ❤️
 >_
 ```
 
+If you try to make it into an alias, you should prefere poiting it to `cargo-mommy` directly,
+we wouldn't want to break rustup toolchain picker, now would we?~
+
 # Configuration
 
 Mommy will read the following environment variables to make her messages better for you~ ❤️
