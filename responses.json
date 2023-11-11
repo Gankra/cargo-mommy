@@ -1,101 +1,135 @@
 {
-    "chill": {
-        "positive": [
-            "*pets your head*",
-            "*gives you scritches*",
-            "you're such a smart cookie~",
-            "that's a good AFFECTIONATE_TERM~",
-            "MOMMYS_ROLE thinks MOMMYS_PRONOUN little AFFECTIONATE_TERM earned a big hug~",
-            "good AFFECTIONATE_TERM~\nMOMMYS_ROLE's so proud of you~",
-            "aww, what a good AFFECTIONATE_TERM~\nMOMMYS_ROLE knew you could do it~",
-            "you did it~!",
-            "MOMMYS_ROLE loves you~",
-            "*gives you a sticker*",
-            "*boops your nose*",
-            "*wraps you in a big hug*",
-            "well done~!\nMOMMYS_ROLE is so happy for you~",
-            "what a good AFFECTIONATE_TERM you are~",
-            "that's MOMMYS_ROLE's clever little AFFECTIONATE_TERM~",
-            "MOMMYS_ROLE loves MOMMYS_PRONOUN cute little AFFECTIONATE_TERM~"
-        ],
-        "negative": [
-            "MOMMYS_ROLE believes in you~",
-            "don't forget to hydrate~",
-            "aww, you'll get it next time~",
-            "do you need MOMMYS_ROLE's help~?",
-            "MOMMYS_ROLE still loves you no matter what~",
-            "oh no did MOMMYS_ROLE's little AFFECTIONATE_TERM make a big mess~?",
-            "MOMMYS_ROLE knows MOMMYS_PRONOUN little AFFECTIONATE_TERM can do better~",
-            "MOMMYS_ROLE still loves you~",
-            "just a little further, sweetie~",
-            "MOMMYS_ROLE thinks MOMMYS_PRONOUN's little AFFECTIONATE_TERM is getting close~",
-            "it's ok, MOMMYS_ROLE's here for you~",
-            "oh, darling, you're almost there~",
-            "does MOMMYS_ROLE's little AFFECTIONATE_TERM need a bit of a break~?",
-            "oops~! MOMMYS_ROLE loves you anyways~",
-            "don't worry, MOMMYS_ROLE knows you can do it~"
-        ]
+    "moods": {
+        "chill": {
+            "positive": [
+                "*pets your head*",
+                "*gives you scritches*",
+                "you're such a smart cookie~",
+                "that's a good {affectionate_term}~",
+                "{role} thinks {pronoun} little {affectionate_term} earned a big hug~",
+                "good {affectionate_term}~\n{role}'s so proud of you~",
+                "aww, what a good {affectionate_term}~\n{role} knew you could do it~",
+                "you did it~!",
+                "{role} loves you~",
+                "*gives you a sticker*",
+                "*boops your nose*",
+                "*wraps you in a big hug*",
+                "well done~!\n{role} is so happy for you~",
+                "what a good {affectionate_term} you are~",
+                "that's {role}'s clever little {affectionate_term}~",
+                "{role} loves {pronoun} cute little {affectionate_term}~"
+            ],
+            "negative": [
+                "{role} believes in you~",
+                "don't forget to hydrate~",
+                "aww, you'll get it next time~",
+                "do you need {role}'s help~?",
+                "{role} still loves you no matter what~",
+                "oh no did {role}'s little {affectionate_term} make a big mess~?",
+                "{role} knows {pronoun} little {affectionate_term} can do better~",
+                "{role} still loves you~",
+                "{role} thinks {pronoun} little {affectionate_term} is getting close~",
+                "it's ok, {role}'s here for you~",
+                "oh, darling, you're almost there~",
+                "does {role}'s little {affectionate_term} need a bit of a break~?",
+                "oops~! {role} loves you anyways~",
+                "don't worry, {role} knows you can do it~"
+            ]
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+        "thirsty": {
+            "spiciness": "thirsty",
+            "positive": [
+                "*tugs your leash*\nthat's a VERY good {affectionate_term}~",
+                "*runs {pronoun} fingers through your hair* good {affectionate_term}~ keep going~",
+                "*smooches your forehead*\ngood job~",
+                "*nibbles on your ear*\nthat's right~\nkeep going~",
+                "*pats your butt*\nthat's a good {affectionate_term}~",
+                "*drags {pronoun} nail along your cheek*\nsuch a good {affectionate_term}~",
+                "*bites {pronoun} lip*\nmhmm~",
+                "give {pronoun} a kiss~",
+                "*heavy breathing against your neck*"
+            ],
+            "negative": [
+                "do you think you're going to get a reward from {role} like that~?",
+                "*grabs your hair and pulls your head back*\nyou can do better than that for {role} can't you~?",
+                "if you don't learn how to code better, {role} is going to put you in time-out~",
+                "does {role} need to give {pronoun} little {affectionate_term} some special lessons~?",
+                "you need to work harder to please {role}~",
+                "gosh you must be flustered~",
+                "are you just keysmashing now~?\ncute~",
+                "is {role}'s little {affectionate_term} having trouble reaching the keyboard~?"
+            ]
+        },
+
+        "yikes": {
+            "spiciness": "yikes",
+            "positive": [
+                "keep it up and {role} might let you cum you little {denigrating_term}~",
+                "good {denigrating_term}~\nyou've earned five minutes with the buzzy wand~",
+                "mmm~ come taste {role}'s {part}~",
+                "*slides {pronoun} finger in your mouth*\nthat's a good little {denigrating_term}~",
+                "you're so good with your fingers~\n{role} knows where {pronoun} {denigrating_term} should put them next~",
+                "{role} is getting hot~",
+                "that's a good {denigrating_term}~",
+                "yes~\nyes~~\nyes~~~",
+                "{role}'s going to keep {pronoun} good little {denigrating_term}~"
+            ],
+            "negative": [
+                "you filthy {denigrating_term}~\nyou made a mess, now clean it up~\nwith your tongue~",
+                "*picks you up by the throat*\npathetic~",
+                "*drags {pronoun} claws down your back*\ndo it again~",
+                "*brandishes {pronoun} paddle*\ndon't make me use this~",
+                "{denigrating_term}.\n{denigrating_term}~\n{denigrating_term}~~",
+                "get on your knees and beg {role} for forgiveness you {denigrating_term}~",
+                "{role} doesn't think {pronoun} little {denigrating_term} should have permission to wear clothes anymore~",
+                "never forget you belong to {role}~",
+                "does {role} need to put you in the {denigrating_term} wiggler~?",
+                "{role} is starting to wonder if you should just give up and become {pronoun} breeding stock~"
+            ]
+        }
     },
 
+    "vars": {
+        "mood": {
+            "defaults": ["chill"]
+        },
+        "emote": {
+            "defaults": ["❤️", "💖", "💗", "💓", "💞"]
+        },
+        "pronoun": {
+            "defaults": ["her"]
+        },
+        "role": {
+            "defaults": ["mommy"]
+        },
 
+        "affectionate_term": {
+            "defaults": ["girl"],
+            "env_key": "LITTLE"
+        },
 
-
-
-
-
-
-
-
-
-
-
-    "thirsty": {
-        "positive": [
-            "*tugs your leash*\nthat's a VERY good AFFECTIONATE_TERM~",
-            "*runs MOMMYS_PRONOUN fingers through your hair* good AFFECTIONATE_TERM~ keep going~",
-            "*smooches your forehead*\ngood job~",
-            "*nibbles on your ear*\nthat's right~\nkeep going~",
-            "*pats your butt*\nthat's a good AFFECTIONATE_TERM~",
-            "*drags MOMMYS_PRONOUN nail along your cheek*\nsuch a good AFFECTIONATE_TERM~",
-            "*bites MOMMYS_PRONOUN lip*\nmhmm~",
-            "give MOMMYS_PRONOUN a kiss~",
-            "*heavy breathing against your neck*"
-        ],
-        "negative": [
-            "do you think you're going to get a reward from MOMMYS_ROLE like that~?",
-            "*grabs your hair and pulls your head back*\nyou can do better than that for MOMMYS_ROLE can't you~?",
-            "if you don't learn how to code better, MOMMYS_ROLE is going to put you in time-out~",
-            "does MOMMYS_ROLE need to give MOMMYS_PRONOUN little AFFECTIONATE_TERM some special lessons~?",
-            "you need to work harder to please MOMMYS_ROLE~",
-            "gosh you must be flustered~",
-            "are you just keysmashing now~?\ncute~",
-            "is MOMMYS_ROLE's little AFFECTIONATE_TERM having trouble reaching the keyboard~?"
-        ]
-    },
-    "yikes": {
-        "positive": [
-            "keep it up and MOMMYS_ROLE might let you cum you little DENIGRATING_TERM~",
-            "good DENIGRATING_TERM~\nyou've earned five minutes with the buzzy wand~",
-            "mmm~ come taste MOMMYS_ROLE's MOMMYS_PART~",
-            "*slides MOMMYS_PRONOUN finger in your mouth*\nthat's a good little DENIGRATING_TERM~",
-            "you're so good with your fingers~\nMOMMYS_ROLE knows where MOMMYS_PRONOUN DENIGRATING_TERM should put them next~",
-            "MOMMYS_ROLE is getting hot~",
-            "that's a good DENIGRATING_TERM~",
-            "yes~\nyes~~\nyes~~~",
-            "MOMMYS_ROLE's going to keep MOMMYS_PRONOUN good little DENIGRATING_TERM~"
-        ],
-        "negative": [
-            "you filthy DENIGRATING_TERM~\nyou made a mess, now clean it up~\nwith your tongue~",
-            "*picks you up by the throat*\npathetic~",
-            "*drags MOMMYS_PRONOUN claws down your back*\ndo it again~",
-            "*brandishes MOMMYS_PRONOUN paddle*\ndon't make me use this~",
-            "DENIGRATING_TERM.\nDENIGRATING_TERM~\nDENIGRATING_TERM~~",
-            "get on your knees and beg MOMMYS_ROLE for forgiveness you DENIGRATING_TERM~",
-            "MOMMYS_ROLE doesn't think MOMMYS_PRONOUN little DENIGRATING_TERM should have permission to wear clothes anymore~",
-            "never forget you belong to MOMMYS_ROLE~",
-            "does MOMMYS_ROLE need to put you in the DENIGRATING_TERM wiggler~?",
-            "MOMMYS_ROLE is starting to wonder if you should just give up and become MOMMYS_PRONOUN breeding stock~"
-        ]
+        "denigrating_term": {
+            "spiciness": "yikes",
+            "defaults": ["slut", "toy", "pet", "pervert", "whore"],
+            "env_key": "FUCKING"
+        },
+        "part": {
+            "spiciness": "yikes",
+            "defaults": ["milk"]
+        }
     }
 }
 
