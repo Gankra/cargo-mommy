@@ -1,6 +1,7 @@
 #![allow(clippy::let_and_return)]
 
 use fastrand::Rng;
+use std::io::IsTerminal;
 
 enum ResponseType {
     Positive,
@@ -133,9 +134,11 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         select_response(&true_role, &rng, ResponseType::Negative)
     };
 
+    let stylize = std::io::stderr().is_terminal();
     match response {
-        Ok(resp) => eprintln!("\x1b[1m{resp}\x1b[0m"),
-        Err(resp) => eprintln!("\x1b[31m{resp}\x1b[0m"),
+        Ok(resp) if stylize => eprintln!("\x1b[1m{resp}\x1b[0m"),
+        Err(resp) if stylize => eprintln!("\x1b[31m{resp}\x1b[0m"),
+        Ok(resp) | Err(resp) => eprintln!("{resp}"),
     }
 
     Ok(code)
