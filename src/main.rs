@@ -13,7 +13,7 @@ fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
     // to support more little ones~
     let code = real_main().unwrap_or_else(|e| {
-        eprintln!("Error: {:?}", e);
+        eprintln!("Error: {e:?}");
         -1
     });
     std::process::exit(code)
@@ -42,8 +42,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     };
 
     match response {
-        Ok(resp) => eprintln!("\x1b[1m{}\x1b[0m", resp),
-        Err(resp) => eprintln!("\x1b[31m{}\x1b[0m", resp),
+        Ok(resp) => eprintln!("\x1b[1m{resp}\x1b[0m"),
+        Err(resp) => eprintln!("\x1b[31m{resp}\x1b[0m"),
     }
 
     Ok(code)
