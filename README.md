@@ -69,11 +69,13 @@ And so on~ 💓
 
 # Configuration (kink)
 
-<summary>
-**THIS IS NSFW, STOP READING IF YOU WANT MOMMY TO REMAIN INNOCENT!**
-</summary>
-<br />
 <details>
+
+<summary>
+<b>THIS IS NSFW, STOP READING IF YOU WANT MOMMY TO REMAIN INNOCENT!</b>
+</summary>
+
+...
 
 Good pet~ ❤️
 
@@ -115,7 +117,6 @@ get on your knees and beg mommy for forgiveness you pervert~
 mommy is starting to wonder if you should just give up and become her breeding stock~ 💗
 
 </details>
-<br />
 
 # Licensing
 mommy likes freedom~ ❤️, and is dual-licensed under [MIT](LICENSE-MIT) and [Apache 2.0](LICENSE-APACHE).
