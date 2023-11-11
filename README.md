@@ -113,3 +113,8 @@ that's a good little toy~ ❤️
 get on your knees and beg mommy for forgiveness you pervert~
 
 mommy is starting to wonder if you should just give up and become her breeding stock~ 💗
+
+# Licensing
+mommy likes freedom, and is dual-licensed under [MIT](LICENSE-MIT) and [Apache 2.0](LICENSE-APACHE)~
+
+use either at your choice.
