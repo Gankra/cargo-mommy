@@ -83,7 +83,7 @@ Good pet~ ❤️
 
 All of mommy's NSFW content is hidden behind CARGO_MOMMYS_MOOD, where "thirsty" is heavy teasing/flirting and "yikes" is full harsh dommy mommy kink~
 
-You can enable "true mommy chaos mode" by setting `CARGO_MOMMYS_MOOD="chill/thirsty/yikes"`, making mommy oscillate wildly between light positive affirmation and trying to break you in half~
+You can enable "true mommy chaos mode" by setting `CARGO_MOMMYS_MOODS="chill/thirsty/yikes"`, making mommy oscillate wildly between light positive affirmation and trying to break you in half~
 
 * `CARGO_MOMMYS_MOODS` - how kinky mommy will be~ (default: "chill", possible values "chill", "thirsty", "yikes")
 * `CARGO_MOMMYS_PARTS` - what part of mommy you should crave~ (default: "milk")
