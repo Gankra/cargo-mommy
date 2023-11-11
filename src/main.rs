@@ -5,26 +5,41 @@ use fastrand::Rng;
 include!(concat!(env!("OUT_DIR"), "/responses.rs"));
 
 const AFFECTIONATE_TERM_PLACEHOLDER: &str = "AFFECTIONATE_TERM";
+#[allow(dead_code)]
 const DENIGRATING_TERM_PLACEHOLDER: &str = "DENIGRATING_TERM";
 const MOMMYS_PRONOUN_PLACEHOLDER: &str = "MOMMYS_PRONOUN";
 const MOMMYS_ROLE_PLACEHOLDER: &str = "MOMMYS_ROLE";
+#[allow(dead_code)]
 const MOMMYS_PART_PLACEHOLDER: &str = "MOMMYS_PART";
 
 const AFFECTIONATE_TERMS_ENV_VAR: &str = "CARGO_MOMMYS_LITTLE";
+#[allow(dead_code)]
 const DENIGRATING_TERMS_ENV_VAR: &str = "CARGO_MOMMYS_FUCKING";
 const MOMMYS_PRONOUNS_ENV_VAR: &str = "CARGO_MOMMYS_PRONOUNS";
+#[allow(dead_code)]
 const MOMMYS_PARTS_ENV_VAR: &str = "CARGO_MOMMYS_PARTS";
 const MOMMYS_ROLES_ENV_VAR: &str = "CARGO_MOMMYS_ROLES";
 const MOMMYS_MOODS_ENV_VAR: &str = "CARGO_MOMMYS_MOODS";
 const MOMMYS_EMOTES_ENV_VAR: &str = "CARGO_MOMMYS_EMOTES";
 
 const AFFECTIONATE_TERMS_DEFAULT: &str = "girl";
-const DENIGRATING_TERMS_DEFAULT: &str = "slut/toy/pet/pervert/whore";
 const MOMMYS_PRONOUNS_DEFAULT: &str = "her";
-const MOMMYS_PARTS_DEFAULT: &str = "milk";
 const MOMMYS_ROLES_DEFAULT: &str = "mommy";
 const MOMMYS_MOODS_DEFAULT: &str = "chill";
 const MOMMYS_EMOTES_DEFAULT: &str = "❤️/💖/💗/💓/💞";
+
+#[cfg(feature = "yikes")]
+const DENIGRATING_TERMS_DEFAULT: &str = "slut/toy/pet/pervert/whore";
+#[cfg(feature = "yikes")]
+const MOMMYS_PARTS_DEFAULT: &str = "milk";
+
+const SUPPORTED_MOODS: &[&str] = &[
+    "chill",
+    #[cfg(feature = "thirsty")]
+    "thirsty",
+    #[cfg(feature = "yikes")]
+    "yikes",
+];
 
 enum ResponseType {
     Positive,
@@ -56,13 +71,18 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     if is_quiet_mode_enabled(cmd.get_args()) {
         return Ok(code);
     }
-    eprintln!("\x1b[1m");
-    if status.success() {
-        eprintln!("{}", select_response(ResponseType::Positive))
+
+    let response = if status.success() {
+        select_response(ResponseType::Positive)
     } else {
-        eprintln!("{}", select_response(ResponseType::Negative));
+        select_response(ResponseType::Negative)
+    };
+
+    match response {
+        Ok(resp) => eprintln!("\x1b[1m{}\x1b[0m", resp),
+        Err(resp) => eprintln!("\x1b[31m{}\x1b[0m", resp),
     }
-    eprintln!("\x1b[0m");
+
     Ok(code)
 }
 
@@ -80,26 +100,35 @@ fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
     false
 }
 
-fn select_response(response_type: ResponseType) -> String {
+fn select_response(response_type: ResponseType) -> Result<String, String> {
     let rng = Rng::new();
 
     // Get mommy's options~
     let affectionate_terms = parse_options(AFFECTIONATE_TERMS_ENV_VAR, AFFECTIONATE_TERMS_DEFAULT);
-    let denigrating_terms = parse_options(DENIGRATING_TERMS_ENV_VAR, DENIGRATING_TERMS_DEFAULT);
     let mommys_pronouns = parse_options(MOMMYS_PRONOUNS_ENV_VAR, MOMMYS_PRONOUNS_DEFAULT);
     let mommys_roles = parse_options(MOMMYS_ROLES_ENV_VAR, MOMMYS_ROLES_DEFAULT);
-    let mommys_parts = parse_options(MOMMYS_PARTS_ENV_VAR, MOMMYS_PARTS_DEFAULT);
     let mommys_moods = parse_options(MOMMYS_MOODS_ENV_VAR, MOMMYS_MOODS_DEFAULT);
     let mommys_emotes = parse_options(MOMMYS_EMOTES_ENV_VAR, MOMMYS_EMOTES_DEFAULT);
+
+    #[cfg(feature = "yikes")]
+    let denigrating_terms = parse_options(DENIGRATING_TERMS_ENV_VAR, DENIGRATING_TERMS_DEFAULT);
+    #[cfg(feature = "yikes")]
+    let mommys_parts = parse_options(MOMMYS_PARTS_ENV_VAR, MOMMYS_PARTS_DEFAULT);
 
     // Choose what mood mommy is in~
     let mood = &mommys_moods[rng.usize(..mommys_moods.len())];
 
-    let responses = &RESPONSES
+    let Some(responses) = &RESPONSES
         .iter()
         .find(|(mood_mode, _)| mood_mode == mood)
-        .expect("couldn't find that mood for mommy!")
-        .1;
+        .map(|x| x.1)
+    else {
+        let supported_moods_str = SUPPORTED_MOODS.join(", ");
+        return Err(format!(
+            "Unknown mood {mood}! We were compiled with: {supported_moods_str}"
+        ));
+    };
+
     // Choose what mommy will say~
     let responses = match response_type {
         ResponseType::Positive => responses[0],
@@ -114,12 +143,14 @@ fn select_response(response_type: ResponseType) -> String {
         &affectionate_terms,
         &rng,
     );
+    #[cfg(feature = "yikes")]
     let response = apply_template(
         &response,
         DENIGRATING_TERM_PLACEHOLDER,
         &denigrating_terms,
         &rng,
     );
+    #[cfg(feature = "yikes")]
     let response = apply_template(&response, MOMMYS_PART_PLACEHOLDER, &mommys_parts, &rng);
     let response = apply_template(
         &response,
@@ -137,7 +168,7 @@ fn select_response(response_type: ResponseType) -> String {
     }
 
     // Done~!
-    response
+    Ok(response)
 }
 
 fn parse_options(env_var: &str, default: &str) -> Vec<String> {
