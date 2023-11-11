@@ -2,8 +2,6 @@
 
 use fastrand::Rng;
 
-include!(concat!(env!("OUT_DIR"), "/responses.rs"));
-
 enum ResponseType {
     Positive,
     Negative,
@@ -69,105 +67,42 @@ fn select_response(response_type: ResponseType) -> Result<String, String> {
     // Get mommy's options~
 
     // Choose what mood mommy is in~
-    const MOMMYS_MOODS_ENV_VAR: &str = "CARGO_MOMMYS_MOODS";
-    const MOMMYS_MOODS_DEFAULT: &str = "chill";
-    let mommys_moods = parse_options(MOMMYS_MOODS_ENV_VAR, MOMMYS_MOODS_DEFAULT);
-    let mood = &mommys_moods[rng.usize(..mommys_moods.len())];
+    let mood = MOOD.load(&rng)?;
 
-    let Some(responses) = &RESPONSES
+    let Some(group) = &CONFIG
+        .moods
         .iter()
-        .find(|(mood_mode, _)| mood_mode == mood)
-        .map(|x| x.1)
+        .find(|group| group.name == mood)
     else {
-        let supported_moods_str = RESPONSES
+        let supported_moods_str = CONFIG
+            .moods
             .iter()
-            .map(|(mood, _)| *mood)
+            .map(|group| group.name)
             .collect::<Vec<_>>()
             .join(", ");
         return Err(format!(
-            "Unknown mood {mood}! We were compiled with: {supported_moods_str}"
+            "{role} doesn't know how to feel {mood}... {pronoun} moods are {supported_moods_str}",
+            role = ROLE.load(&rng)?,
+            pronoun = PRONOUN.load(&rng)?,
         ));
     };
 
     // Choose what mommy will say~
     let responses = match response_type {
-        ResponseType::Positive => responses[0],
-        ResponseType::Negative => responses[1],
+        ResponseType::Positive => group.positive,
+        ResponseType::Negative => group.negative,
     };
     let response = &responses[rng.usize(..responses.len())];
 
     // Apply options to the message template~
-    let response = {
-        const AFFECTIONATE_TERMS_ENV_VAR: &str = "CARGO_MOMMYS_LITTLE";
-        const AFFECTIONATE_TERMS_DEFAULT: &str = "girl";
-        const AFFECTIONATE_TERM_PLACEHOLDER: &str = "AFFECTIONATE_TERM";
-        let affectionate_terms =
-            parse_options(AFFECTIONATE_TERMS_ENV_VAR, AFFECTIONATE_TERMS_DEFAULT);
+    let mut response = CONFIG.apply_template(response, &rng)?;
 
-        apply_template(
-            response,
-            AFFECTIONATE_TERM_PLACEHOLDER,
-            &affectionate_terms,
-            &rng,
-        )
-    };
-
-    #[cfg(feature = "yikes")]
-    let response = {
-        const DENIGRATING_TERMS_ENV_VAR: &str = "CARGO_MOMMYS_FUCKING";
-        const DENIGRATING_TERMS_DEFAULT: &str = "slut/toy/pet/pervert/whore";
-        const DENIGRATING_TERM_PLACEHOLDER: &str = "DENIGRATING_TERM";
-        let denigrating_terms = parse_options(DENIGRATING_TERMS_ENV_VAR, DENIGRATING_TERMS_DEFAULT);
-        apply_template(
-            &response,
-            DENIGRATING_TERM_PLACEHOLDER,
-            &denigrating_terms,
-            &rng,
-        )
-    };
-
-    #[cfg(feature = "yikes")]
-    let response = {
-        const MOMMYS_PARTS_ENV_VAR: &str = "CARGO_MOMMYS_PARTS";
-        const MOMMYS_PARTS_DEFAULT: &str = "milk";
-        const MOMMYS_PART_PLACEHOLDER: &str = "MOMMYS_PART";
-        let mommys_parts = parse_options(MOMMYS_PARTS_ENV_VAR, MOMMYS_PARTS_DEFAULT);
-        apply_template(&response, MOMMYS_PART_PLACEHOLDER, &mommys_parts, &rng)
-    };
-
-    let response = {
-        const MOMMYS_PRONOUNS_ENV_VAR: &str = "CARGO_MOMMYS_PRONOUNS";
-        const MOMMYS_PRONOUN_PLACEHOLDER: &str = "MOMMYS_PRONOUN";
-        const MOMMYS_PRONOUNS_DEFAULT: &str = "her";
-        let mommys_pronouns = parse_options(MOMMYS_PRONOUNS_ENV_VAR, MOMMYS_PRONOUNS_DEFAULT);
-
-        apply_template(
-            &response,
-            MOMMYS_PRONOUN_PLACEHOLDER,
-            &mommys_pronouns,
-            &rng,
-        )
-    };
-
-    let mut response = {
-        const MOMMYS_ROLES_DEFAULT: &str = "mommy";
-        const MOMMYS_ROLES_ENV_VAR: &str = "CARGO_MOMMYS_ROLES";
-        const MOMMYS_ROLE_PLACEHOLDER: &str = "MOMMYS_ROLE";
-        let mommys_roles = parse_options(MOMMYS_ROLES_ENV_VAR, MOMMYS_ROLES_DEFAULT);
-        apply_template(&response, MOMMYS_ROLE_PLACEHOLDER, &mommys_roles, &rng)
-    };
-
-    {
-        const MOMMYS_EMOTES_ENV_VAR: &str = "CARGO_MOMMYS_EMOTES";
-        const MOMMYS_EMOTES_DEFAULT: &str = "❤️/💖/💗/💓/💞";
-        let mommys_emotes = parse_options(MOMMYS_EMOTES_ENV_VAR, MOMMYS_EMOTES_DEFAULT);
-
-        let should_emote = rng.bool();
-        if should_emote && !mommys_emotes.is_empty() {
-            let mommys_emotes = parse_options(MOMMYS_EMOTES_ENV_VAR, MOMMYS_EMOTES_DEFAULT);
-            let emote = &mommys_emotes[rng.usize(..mommys_emotes.len())];
+    // Let mommy show a little emote~
+    let should_emote = rng.bool();
+    if should_emote {
+        if let Ok(emote) = EMOTE.load(&rng) {
             response.push(' ');
-            response.push_str(emote);
+            response.push_str(&emote);
         }
     }
 
@@ -175,24 +110,79 @@ fn select_response(response_type: ResponseType) -> Result<String, String> {
     Ok(response)
 }
 
-fn parse_options(env_var: &str, default: &str) -> Vec<String> {
-    std::env::var(env_var)
-        .unwrap_or_else(|_| default.to_owned())
-        .split('/')
-        .map(|s| s.to_owned())
-        .collect()
+// Mommy generates CONFIG and other global constants in build.rs~
+include!(concat!(env!("OUT_DIR"), "/responses.rs"));
+
+struct Config<'a> {
+    vars: &'a [Var<'a>],
+    moods: &'a [Mood<'a>],
 }
 
-fn apply_template(input: &str, template_key: &str, options: &[String], rng: &Rng) -> String {
-    let mut last_position = 0;
-    let mut output = String::new();
-    for (index, matched) in input.match_indices(template_key) {
-        output.push_str(&input[last_position..index]);
-        output.push_str(&options[rng.usize(..options.len())]);
-        last_position = index + matched.len();
+impl Config<'_> {
+    /// Applies a template by resolving `Chunk::Var`s against `self.vars`.
+    fn apply_template(&self, chunks: &[Chunk], rng: &Rng) -> Result<String, String> {
+        let mut out = String::new();
+        for chunk in chunks {
+            match chunk {
+                Chunk::Text(text) => out.push_str(text),
+                Chunk::Var(i) => out.push_str(&self.vars[*i].load(rng)?),
+            }
+        }
+        Ok(out)
     }
-    output.push_str(&input[last_position..]);
-    output
+}
+
+struct Mood<'a> {
+    name: &'a str,
+    // Each of mommy's response templates is an alternating sequence of
+    // Text and Var chunks; Text is literal text that should be printed as-is;
+    // Var is an index into mommy's CONFIG.vars table~
+    positive: &'a [&'a [Chunk<'a>]],
+    negative: &'a [&'a [Chunk<'a>]],
+}
+
+enum Chunk<'a> {
+    Text(&'a str),
+    Var(usize),
+}
+
+struct Var<'a> {
+    env_key: &'a str,
+    defaults: &'a [&'a str],
+}
+
+impl Var<'_> {
+    /// Loads this variable and selects one of the possible values for it;
+    /// produces an in-character error message on failure.
+    fn load(&self, rng: &Rng) -> Result<String, String> {
+        let var = std::env::var(self.env_key);
+        let split;
+
+        let choices = match var.as_deref() {
+            Ok("") => &[],
+            Ok(value) => {
+                split = value.split('/').collect::<Vec<_>>();
+                split.as_slice()
+            }
+            Err(_) => self.defaults,
+        };
+
+        if choices.is_empty() {
+            // If self == ROLE, mommy needs to avoid infinite recursion and
+            // blowing her stack~
+            let role = match self.env_key {
+                "CARGO_MOMMYS_ROLES" => "mommy(?)".to_string(),
+                _ => ROLE.load(rng)?,
+            };
+
+            return Err(format!(
+                "{role} needs at least one value for {}~",
+                self.env_key
+            ));
+        }
+
+        Ok(choices[rng.usize(..choices.len())].to_owned())
+    }
 }
 
 #[cfg(test)]
