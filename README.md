@@ -74,14 +74,14 @@ OS-specific information:
 
 ### For macOS, Linux, BSD (or any sufficiently Unix-like operating system)
 
-You're probably using zsh or bash as your login shell, to check - open up a terminal window (Terminal.app or iTerm2 on macOS; Console, Terminal, Konsole, Kitty, or Alacritty most likely anywhere else) and run `echo $SHELL`.
+You're probably using [Zsh](https://zsh.sourceforge.io/) or [Bash](https://www.gnu.org/software/bash/) as your login shell, to check - open up a terminal window (Terminal.app or [iTerm2](https://github.com/gnachman/iTerm2) on macOS; [Console](https://gitlab.gnome.org/GNOME/console), [Terminal](https://gitlab.gnome.org/GNOME/gnome-terminal), [Konsole](https://github.com/KDE/konsole), [Kitty](https://github.com/kovidgoyal/kitty), or [Alacritty](https://github.com/alacritty/alacritty) most likely anywhere else) and run `echo $SHELL`.
 
 You can see all of your current settings by running `export -p | grep CARGO_MOMMY`.
 
-Depending on the one you have, you'll have to modify the contents of your rcfile (with vi, nano, micro, hx etc.), or create one if it doesn't exist.
+Depending on the one you have, you'll have to modify the contents of your rcfile (with [vim](https://github.com/vim/vim), [nano](https://nano-editor.org/), [helix](https://github.com/helix-editor/helix) etc.), or create one if it doesn't exist.
 
 - Bash:
-  Change ~/.bashrc to include your settings. Set them with `export VAR_NAME=value`, for example:
+  Change `~/.bashrc` to include your settings. Set them with `export VAR_NAME=value`, for example:
 
   ```sh
   $ cat ~/.bashrc
@@ -93,10 +93,10 @@ Depending on the one you have, you'll have to modify the contents of your rcfile
   ```
 
 - Zsh:
-  Change ~/.zshrc. Set them with `export VAR_NAME=value`, for example:
+  Change `~/.zshenv`. Set them with `export VAR_NAME=value`, for example:
 
   ```sh
-  $ cat ~/.zshrc
+  $ cat ~/.zshenv
 
     export CARGO_MOMMYS_LITTLE="girlie"
     export CARGO_MOMMYS_ROLES="momma"
@@ -104,7 +104,7 @@ Depending on the one you have, you'll have to modify the contents of your rcfile
     export CARGO_MOMMYS_MOODS="chill/thirsty"
   ```
 
-To remove any of the settings, simply remove the associated line in the file.
+To remove any of the settings, simply delete the associated line in the file.
 
 ### For our dear Windows friends:
 
@@ -113,13 +113,13 @@ To check which settings you're currently using, open a Command Prompt or Powersh
 - For Command Prompt:
 
   ```sh
-  set | find "CARGO_MOMMY"
+  > set | find "CARGO_MOMMY"
   ```
 
 - For Powershell (now might be a good time to learn the difference between Windows `powershell.exe` and Microsoft `pwsh.exe`):
 
   ```powershell
-  Get-Item Env:\CARGO_MOMMY*
+  > Get-Item Env:\CARGO_MOMMY*
   ```
 
 It's simultaneously easier and harder to set environment variables on Windows - soo many ways are available, but the easiest are:
@@ -133,13 +133,13 @@ It's simultaneously easier and harder to set environment variables on Windows - 
 - If you happen to have modern Powershell (that's anything with the Microsoft branding/black logo/version 7+), you can run:
 
   ```powershell
-  [Environment]::SetEnvironmentVariable("VAR_NAME", "value", "User")
+  > [Environment]::SetEnvironmentVariable("VAR_NAME", "value", "User")
   ```
 
   to add one, and:
 
   ```powershell
-  [Environment]::SetEnvironmentVariable("VAR_NAME", "", "User")
+  > [Environment]::SetEnvironmentVariable("VAR_NAME", "", "User")
   ```
   
   to remove it (by setting it to an empty string).
