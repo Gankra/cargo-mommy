@@ -3,22 +3,17 @@ use std::fs;
 use std::path::Path;
 
 const RESPONSES: &str = include_str!("./responses.json");
-
-#[derive(serde::Deserialize)]
-struct AllResponses {
-    chill: Responses,
-    thirsty: Responses,
-    yikes: Responses,
-}
+type AllResponses = std::collections::BTreeMap<String, Responses>;
 #[derive(serde::Deserialize)]
 struct Responses {
     positive: Vec<String>,
     negative: Vec<String>,
 }
 
-fn serialise_responses(name: &str, response: Responses) -> String {
-    let response_positive = response.positive;
-    let response_negative = response.negative;
+fn serialise_responses(name: &str, responses: &AllResponses) -> String {
+    let response = &responses[name];
+    let response_positive = &response.positive;
+    let response_negative = &response.negative;
 
     format!(
         r#"("{name}", &[
@@ -30,22 +25,18 @@ fn serialise_responses(name: &str, response: Responses) -> String {
 
 fn main() {
     let out_dir = &env::var("OUT_DIR").unwrap();
-    let AllResponses {
-        chill,
-        thirsty,
-        yikes,
-    } = serde_json::from_str(RESPONSES).unwrap();
+    let responses: AllResponses = serde_json::from_str(RESPONSES).unwrap();
     let dest_path = Path::new(out_dir).join("responses.rs");
 
     let mut enabled_responses = String::new();
 
-    enabled_responses += &serialise_responses("chill", chill);
+    enabled_responses += &serialise_responses("chill", &responses);
 
     if cfg!(feature = "thirsty") {
-        enabled_responses += &serialise_responses("thirsty", thirsty);
+        enabled_responses += &serialise_responses("thirsty", &responses);
     }
     if cfg!(feature = "yikes") {
-        enabled_responses += &serialise_responses("yikes", yikes);
+        enabled_responses += &serialise_responses("yikes", &responses);
     }
 
     fs::write(
