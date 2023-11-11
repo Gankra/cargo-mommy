@@ -1,3 +1,16 @@
+//! Code that statically parses responses.json and adds it to the codebase~
+//!
+//! This allows the binary to only include what it needs, both perf-wise
+//! and oh-god-i-found-these-strings-in-this-binary-wise.
+//!
+//! How to add a new mood (look for all the places "thirsty" shows up, duplicate it):
+//!
+//! * responses.json: add the data
+//! * Cargo.toml: add a default-on cfg for it
+//! * build.rs: Add a serialize_responses call (behind that cfg)
+//! * main.rs: If your mood needs access to yikes-exclusive substitutions like "DENIGRATING_TERM"
+//!   then update the `cfg`'s in main.rs to enable them when your feature is there too
+
 use std::env;
 use std::fs;
 use std::path::Path;
