@@ -287,9 +287,7 @@ impl Var<'_> {
         // Normally we'd load from CARGO_MOMMYS_*
         // but if cargo-mommy is cargo-daddy, we should load CARGO_DADDYS_* instead~
         let screaming_role = true_role.to_ascii_uppercase();
-        let var = format!("CARGO_{screaming_role}S_{}", self.env_key);
-        eprintln!("using: {}", var);
-        var
+        format!("CARGO_{screaming_role}S_{}", self.env_key)
     }
 }
 
