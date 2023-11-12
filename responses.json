@@ -113,7 +113,7 @@
             "defaults": ["her"]
         },
         "role": {
-            "defaults": ["mommy"]
+            "defaults": []
         },
 
         "affectionate_term": {

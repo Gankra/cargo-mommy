@@ -98,7 +98,7 @@ fn main() {
         let defaults = &var.defaults;
         let _ = write!(
             vars,
-            r#"Var {{ env_key: "CARGO_MOMMYS_{env_key}", defaults: &{defaults:?} }},"#
+            r#"Var {{ env_key: "{env_key}", defaults: &{defaults:?} }},"#
         );
     }
 
