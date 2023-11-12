@@ -43,10 +43,10 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     };
 
     let stylize = std::io::stderr().is_terminal();
-    match response {
-        Ok(resp) if stylize => eprintln!("\x1b[1m{}\x1b[0m", resp),
-        Err(resp) if stylize => eprintln!("\x1b[31m{}\x1b[0m", resp),
-        Ok(resp) | Err(resp) => eprintln!("{}", resp),
+    match (response, stylize) {
+        (Ok(resp), true) => eprintln!("\x1b[1m{}\x1b[0m", resp),
+        (Err(resp), true) => eprintln!("\x1b[31m{}\x1b[0m", resp),
+        (Ok(resp) | Err(resp), false) => eprintln!("{}", resp),
     }
 
     Ok(code)
