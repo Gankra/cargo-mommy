@@ -53,6 +53,7 @@ Mommy will read the following environment variables to make her messages better 
 * `CARGO_MOMMYS_PRONOUNS` - what pronouns mommy will use for themself~ (default: "her")
 * `CARGO_MOMMYS_ROLES` - what role mommy will have~ (default "mommy")
 * `CARGO_MOMMYS_EMOTES` - what emotes mommy will have~ (default "❤️/💖/💗/💓/💞")
+* `CARGO_MOMMYS_MOODS` - picks the set of possible responses~ (default: "chill", possible values "chill", "ominous")
 
 All of these options can take a `/` separated list. Mommy will randomly select one of them whenever she talks to you~
 
@@ -85,7 +86,6 @@ All of mommy's NSFW content is hidden behind CARGO_MOMMYS_MOODS, where "thirsty"
 
 You can enable "true mommy chaos mode" by setting `CARGO_MOMMYS_MOODS="chill/thirsty/yikes"`, making mommy oscillate wildly between light positive affirmation and trying to break you in half~
 
-* `CARGO_MOMMYS_MOODS` - how kinky mommy will be~ (default: "chill", possible values "chill", "thirsty", "yikes")
 * `CARGO_MOMMYS_PARTS` - what part of mommy you should crave~ (default: "milk")
 * `CARGO_MOMMYS_FUCKING` - what to call mommy's pet~ (default: "slut/toy/pet/pervert/whore")
 
