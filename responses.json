@@ -85,7 +85,10 @@
                 "{role} is getting hot~",
                 "that's a good {denigrating_term}~",
                 "yes~\nyes~~\nyes~~~",
-                "{role}'s going to keep {pronoun} good little {denigrating_term}~"
+                "{role}'s going to keep {pronoun} good little {denigrating_term}~",
+                "Open wide {denigrating_term}. you've earned {role}'s {part}~",
+                "Do you want {role}'s {part}? Keep this up and you'll earn it~",
+                "Oooh~ what a good {denigrating_term} you are.~"
             ],
             "negative": [
                 "you filthy {denigrating_term}~\nyou made a mess, now clean it up~\nwith your tongue~",
@@ -97,7 +100,11 @@
                 "{role} doesn't think {pronoun} little {denigrating_term} should have permission to wear clothes anymore~",
                 "never forget you belong to {role}~",
                 "does {role} need to put you in the {denigrating_term} wiggler~?",
-                "{role} is starting to wonder if you should just give up and become {pronoun} breeding stock~"
+                "{role} is starting to wonder if you should just give up and become {pronoun} breeding stock~",
+                "On your knees {denigrating_term}~",
+                "Oh dear. {role} is not pleased",
+                "One spank per error and warning sounds appropreate, don't you think {denigrating_term}?",
+                "No more {part} for you {denigrating_term}"
             ]
         }
     },
