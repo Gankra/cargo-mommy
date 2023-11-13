@@ -31,18 +31,19 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // but we want to let it instead be cargo-daddy, and for everything to rekey itself to:
     // * make the default role be "daddy"
     // * make all the read env-vars be "CARGO_DADDYS_*"
-    let mut platform_uses_exe = false;
-    let raw_first_arg = arg_iter.next().unwrap_or_default();
-    let first_arg = if let Some(stripped) = raw_first_arg.strip_suffix(".exe") {
-        platform_uses_exe = true;
-        stripped.to_owned()
-    } else {
-        raw_first_arg.clone()
-    };
-    let true_role = if let Some((_path, role)) = first_arg.rsplit_once("cargo-") {
+
+    // Interpret the argument as a path so we can manipulate it~
+    let bin_path = std::path::PathBuf::from(arg_iter.next().unwrap_or_default());
+    // Get the extensionless-file name, and parse if case-insensitively~
+    let bin_name = bin_path
+        .file_stem()
+        .unwrap_or_default()
+        .to_string_lossy()
+        .to_lowercase();
+    let true_role = if let Some((_path, role)) = bin_name.rsplit_once("cargo-") {
         role.to_owned()
     } else {
-        // If something messed up is going on, default to "mommy"
+        // If something messed up is going on "mommy" will always take care of it~
         "mommy".to_owned()
     };
 
@@ -59,7 +60,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // belive we do this, `cargo-mommy mommy` will still only get you onw message).
 
     if arg_iter.peek().map_or(false, |arg| arg == &true_role) {
-        let _role = arg_iter.next();
+        let _ = arg_iter.next();
     }
 
     // *WHEEZES*
@@ -77,25 +78,30 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // ~
     let mut speculated = vec![];
     {
-        speculated.extend(arg_iter.by_ref().take(3));
-        let new_role = speculated.get(2);
+        // We speculate the "i mean" part so that can easily discard it
+        // in the case of "cargo mommy i mean mommy", making the execution
+        // equivalent to "cargo mommy mommy". Not popping off the extra
+        // "mommy" let "cargo mommy i mean mommy i mean mommy" work right~
+        speculated.extend(arg_iter.by_ref().take(2));
+        let new_role = arg_iter.peek();
         let mean = speculated.get(1) == Some(&"mean".to_owned());
         let i = speculated.get(0) == Some(&"i".to_owned());
         if i && mean {
             if let Some(new_role) = new_role.cloned() {
                 // Ok at this point we're confident we got "i mean <new_role>"
-                // so definitely consume the arguments~
+                // so definitely consume the speculated arguments~
                 speculated.clear();
 
                 // If the new role is the same as before, they typed something like
                 // "cargo mommy i mean mommy test" so we don't need to do anything~
                 if new_role != true_role {
-                    let orig_bin_path = std::path::PathBuf::from(raw_first_arg);
-                    if let Some(parent) = orig_bin_path.parent() {
-                        let new_bin_ext = if platform_uses_exe { ".exe" } else { "" };
-                        let new_bin_name = format!("cargo-{new_role}{new_bin_ext}");
-                        let new_bin_path = parent.join(new_bin_name);
-                        if let Err(e) = std::fs::copy(orig_bin_path, new_bin_path) {
+                    if let Some(parent) = bin_path.parent() {
+                        let new_bin_name = format!("cargo-{new_role}");
+                        let mut new_bin_path = parent.join(new_bin_name);
+                        if let Some(ext) = bin_path.extension() {
+                            new_bin_path.set_extension(ext);
+                        }
+                        if let Err(e) = std::fs::copy(bin_path, new_bin_path) {
                             return Err(format!(
                                 "{role} couldn't copy {pronoun}self...\n{e:?}",
                                 role = ROLE.load(&true_role, &rng)?,
