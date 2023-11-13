@@ -70,29 +70,26 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // *PANTS FOR A MINUTE*
     //
     // Ok so now we want to detect if the invocation looked like "cargo mommy i mean daddy"
-    // if it *does* we want to copy ourselves to rename cargo-mommy to cargo-daddy. We can't
-    // clone std::env::args() and we need to peek more than one element, so we create a
-    // "speculation" buffer that we will chain back into the args on failed speculation.
-    // on successful speculation we'll purge the buffer, effectively consuming the args.
+    // if it *does* we want to copy ourselves to rename cargo-mommy to cargo-daddy. To make this
+    // simpler, collect the args into a vec so we can peek more than one element.
     //
     // ...
     //
     // ~
-    let mut speculated = vec![];
+    let mut args: Vec<_> = arg_iter.collect();
     {
         // We speculate the "i mean" part so that can easily discard it
         // in the case of "cargo mommy i mean mommy", making the execution
         // equivalent to "cargo mommy mommy". Not popping off the extra
         // "mommy" let "cargo mommy i mean mommy i mean mommy" work right~
-        speculated.extend(arg_iter.by_ref().take(2));
-        let new_role = arg_iter.peek();
-        let mean = speculated.get(1) == Some(&"mean".to_owned());
-        let i = speculated.get(0) == Some(&"i".to_owned());
+        let new_role = args.get(2);
+        let mean = args.get(1) == Some(&"mean".to_owned());
+        let i = args.get(0) == Some(&"i".to_owned());
         if i && mean {
             if let Some(new_role) = new_role.cloned() {
                 // Ok at this point we're confident we got "i mean <new_role>"
-                // so definitely consume the speculated arguments~
-                speculated.clear();
+                // so definitely consume those arguments~
+                args.drain(..2);
 
                 // If the new role is the same as before, they typed something like
                 // "cargo mommy i mean mommy test" so we don't need to do anything~
@@ -128,7 +125,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Time for mommy to call cargo~
     let mut cmd = std::process::Command::new(cargo);
-    cmd.args(speculated.into_iter().chain(arg_iter));
+    cmd.args(args);
     let status = cmd.status()?;
     let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
