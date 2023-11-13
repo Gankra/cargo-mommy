@@ -295,7 +295,8 @@ impl Var<'_> {
     fn env(&self, true_role: &str) -> String {
         // Normally we'd load from CARGO_MOMMYS_*
         // but if cargo-mommy is cargo-daddy, we should load CARGO_DADDYS_* instead~
-        let screaming_role = true_role.to_ascii_uppercase();
+        // If we have multiple words in our role, we must also be careful with spaces~
+        let screaming_role = true_role.to_ascii_uppercase().replace(' ', "_");
         format!("CARGO_{screaming_role}S_{}", self.env_key)
     }
 }
