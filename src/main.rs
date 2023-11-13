@@ -13,7 +13,7 @@ fn main() {
     // to support more little ones~
     let code = real_main().unwrap_or_else(|e| {
         eprintln!("Error: {e:?}");
-        -1
+        1
     });
     std::process::exit(code)
 }
@@ -128,7 +128,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let mut cmd = std::process::Command::new(cargo);
     cmd.args(speculated.into_iter().chain(arg_iter));
     let status = cmd.status()?;
-    let code = status.code().unwrap_or(-1);
+    let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
         return Ok(code);
     }
