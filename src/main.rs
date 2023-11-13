@@ -33,8 +33,10 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // * make all the read env-vars be "CARGO_DADDYS_*"
 
     // Interpret the argument as a path so we can manipulate it~
-    let bin_path = std::path::PathBuf::from(arg_iter.next().unwrap_or_default());
-    // Get the extensionless-file name, and parse if case-insensitively~
+    let first_arg = arg_iter.next();
+    let bin_path = std::env::current_exe()
+        .unwrap_or_else(|_| std::path::PathBuf::from(first_arg.unwrap_or_default()));
+    // Get the extensionless-file name, and parse it case-insensitively~
     let bin_name = bin_path
         .file_stem()
         .unwrap_or_default()
