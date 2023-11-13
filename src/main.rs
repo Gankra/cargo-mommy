@@ -59,7 +59,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // we pop off that redundant copy before forwarding the rest of the args back to "cargo ...".
     // if we don't do this, we'll infinitely recurse into ourselves by re-calling "cargo mommy"!
     // (note that it *is* supported to do `cargo mommy mommy` and get two messages, although I
-    // belive we do this, `cargo-mommy mommy` will still only get you onw message).
+    // believe we do this, `cargo-mommy mommy` will still only get you one message).
 
     if arg_iter.peek().map_or(false, |arg| arg == &true_role) {
         let _ = arg_iter.next();
