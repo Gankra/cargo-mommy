@@ -17,6 +17,8 @@
                 "well done~!\n{role} is so happy for you~",
                 "what a good {affectionate_term} you are~",
                 "that's {role}'s clever little {affectionate_term}~",
+                "you're doing so well~!",
+                "you're making {role} so happy~",
                 "{role} loves {pronoun} cute little {affectionate_term}~"
             ],
             "negative": [
@@ -24,6 +26,7 @@
                 "don't forget to hydrate~",
                 "aww, you'll get it next time~",
                 "do you need {role}'s help~?",
+                "everything's gonna be ok~",
                 "{role} still loves you no matter what~",
                 "oh no did {role}'s little {affectionate_term} make a big mess~?",
                 "{role} knows {pronoun} little {affectionate_term} can do better~",
@@ -33,6 +36,7 @@
                 "oh, darling, you're almost there~",
                 "does {role}'s little {affectionate_term} need a bit of a break~?",
                 "oops~! {role} loves you anyways~",
+                "try again for {role}, {affectionate_term}~",
                 "don't worry, {role} knows you can do it~"
             ],
             "overflow": [
@@ -78,6 +82,7 @@
                 "*heavy breathing against your neck*"
             ],
             "negative": [
+                "you're so cute when you're flustered~",
                 "do you think you're going to get a reward from {role} like that~?",
                 "*grabs your hair and pulls your head back*\nyou can do better than that for {role} can't you~?",
                 "if you don't learn how to code better, {role} is going to put you in time-out~",
