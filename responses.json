@@ -59,7 +59,7 @@
                 "*pats your butt*\nthat's a good {affectionate_term}~",
                 "*drags {pronoun} nail along your cheek*\nsuch a good {affectionate_term}~",
                 "*bites {pronoun} lip*\nmhmm~",
-                "give {pronoun} a kiss~",
+                "give {role} a kiss~",
                 "*heavy breathing against your neck*"
             ],
             "negative": [
