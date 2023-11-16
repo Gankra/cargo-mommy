@@ -34,6 +34,9 @@
                 "does {role}'s little {affectionate_term} need a bit of a break~?",
                 "oops~! {role} loves you anyways~",
                 "don't worry, {role} knows you can do it~"
+            ],
+            "overflow": [
+                "{role} has executed too many times and needs to take a nap~"
             ]
         },
         "ominous": {
@@ -83,6 +86,9 @@
                 "gosh you must be flustered~",
                 "are you just keysmashing now~?\ncute~",
                 "is {role}'s little {affectionate_term} having trouble reaching the keyboard~?"
+            ],
+            "overflow": [
+                "you've been a bad little {affectionate_term} and worn out {role}~"
             ]
         },
 
@@ -117,6 +123,9 @@
                 "Oh dear. {role} is not pleased",
                 "One spank per error sounds appropriate, don't you think {denigrating_term}?",
                 "No more {part} for you {denigrating_term}"
+            ],
+            "overflow": [
+                "brats like you don't get to talk to {role}"
             ]
         }
     },

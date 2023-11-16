@@ -6,7 +6,16 @@ use std::io::IsTerminal;
 enum ResponseType {
     Positive,
     Negative,
+    Overflow,
 }
+
+/// Mommy intentionally lets her little ones call her recursively, since they might want to hear more from her~
+///
+/// If they call her a thousand times in a row, though, something has probably gone wrong 😏
+const RECURSION_LIMIT: u8 = 100;
+/// This name is intentionally not user-configurable. Mommy can't let the little ones make *too*
+/// much of a mess~
+const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
 
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
@@ -48,6 +57,24 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         // If something messed up is going on "mommy" will always take care of it~
         "mommy".to_owned()
     };
+
+    // Check if someone has told mommy to keep calling herself~
+    // Mommy loves you, darlings, but she can't keep running forever~
+    let mut new_limit = 1;
+    if let Ok(limit) = std::env::var(RECURSION_LIMIT_VAR) {
+        if let Ok(n) = limit.parse::<u8>() {
+            if n > RECURSION_LIMIT {
+                let mut response = select_response(&true_role, &rng, ResponseType::Overflow);
+                match &mut response {
+                    Ok(s) | Err(s) => *s += "\nyou didn't set CARGO to something naughty, did you?\n",
+                }
+                pretty_print(response);
+                return Ok(2)
+            } else {
+                new_limit = n + 1;
+            }
+        }
+    }
 
     // *GASPS FOR BREATH*
     //
@@ -125,7 +152,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Time for mommy to call cargo~
     let mut cmd = std::process::Command::new(cargo);
-    cmd.args(args);
+    cmd.args(args).env(RECURSION_LIMIT_VAR, new_limit.to_string());
     let status = cmd.status()?;
     let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
@@ -138,15 +165,18 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     } else {
         select_response(&true_role, &rng, ResponseType::Negative)
     };
+    pretty_print(response);
 
+    Ok(code)
+}
+
+fn pretty_print(response: Result<String, String>) {
     let stylize = std::io::stderr().is_terminal();
     match (response, stylize) {
         (Ok(resp), true) => eprintln!("\x1b[1m{resp}\x1b[0m"),
         (Err(resp), true) => eprintln!("\x1b[31m{resp}\x1b[0m"),
         (Ok(resp) | Err(resp), false) => eprintln!("{resp}"),
     }
-
-    Ok(code)
 }
 
 fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
@@ -189,6 +219,7 @@ fn select_response(
     let responses = match response_type {
         ResponseType::Positive => group.positive,
         ResponseType::Negative => group.negative,
+        ResponseType::Overflow => group.overflow,
     };
     let response = &responses[rng.usize(..responses.len())];
 
@@ -242,6 +273,7 @@ struct Mood<'a> {
     // Var is an index into mommy's CONFIG.vars table~
     positive: &'a [&'a [Chunk<'a>]],
     negative: &'a [&'a [Chunk<'a>]],
+    overflow: &'a [&'a [Chunk<'a>]],
 }
 
 enum Chunk<'a> {

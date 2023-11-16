@@ -49,6 +49,7 @@ impl Default for Spiciness {
 struct Mood {
     positive: Vec<String>,
     negative: Vec<String>,
+    overflow: Vec<String>,
 
     #[serde(default)]
     spiciness: Spiciness,
@@ -144,6 +145,10 @@ fn main() {
         }
         let _ = write!(responses, "], negative: &[");
         for response in &mood.negative {
+            parse_response(response, &mut responses)
+        }
+        let _ = write!(responses, "], overflow: &[");
+        for response in &mood.overflow {
             parse_response(response, &mut responses)
         }
         let _ = write!(responses, "] }},");
