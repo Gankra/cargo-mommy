@@ -1,5 +1,10 @@
 # Unreleased
 
+Nothing Yet!
+
+
+# Version 0.3.0 (2023-11-18)
+
 mommy has lots of improvements from lots of good little helpers~
 
 * mommy is now totally data-driven, new moods and templates can be added with only the responses.json~
