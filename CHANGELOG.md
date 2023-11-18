@@ -1,6 +1,30 @@
 # Unreleased
 
-Nothing Yet!
+mommy has lots of improvements from lots of good little helpers~
+
+* mommy is now totally data-driven, new moods and templates can be added with only the responses.json~
+
+* 'cargo mommy i mean daddy' will turn cargo-mommy into cargo-daddy (it's not just daddy that works)~
+
+* mommy now reflects on her true nature, so if you invoke her as cargo-daddy, she'll default to calling herself "daddy" and read config from `CARGO_DADDYS_*` (note the extra S at the end!)~
+
+* mommy now handles colors better when piped to a file~
+
+* mommy has lots of type fixes and new things to say to you~
+
+* mommy can now be in an "ominous" mood~
+
+* mommy has more docs~
+
+* mommy now exit codes positively when you make a mistake~
+
+* mommy now notices when she's run too many times recursively~
+
+* mommy now has proper ci and release engineering~
+
+* [mommy now has prebuilt binaries and curl|sh installers from cargo-dist~](https://github.com/Gankra/cargo-mommy/releases)
+
+* [mommy now has a website from oranda where you can get the prebuilt binaries~](https://faultlore.com/cargo-mommy/)
 
 
 
