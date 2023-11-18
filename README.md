@@ -1,4 +1,13 @@
-# cargo-mommy
+<div class="oranda-hide">
+
+# `cargo-mommy`
+
+</div>
+
+[![crates.io](https://img.shields.io/crates/v/cargo-mommy.svg)](https://crates.io/crates/cargo-mommy)
+[![docs](https://docs.rs/cargo-mommy/badge.svg)](https://docs.rs/cargo-mommy)
+[![Rust CI](https://github.com/Gankra/cargo-mommy/workflows/Rust/badge.svg?branch=main)](https://github.com/Gankra/cargo-mommy/actions/workflows/ci.yml)
+
 
 Mommy's here to support you when running cargo~ ❤️
 
