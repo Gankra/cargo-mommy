@@ -66,10 +66,12 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
             if n > RECURSION_LIMIT {
                 let mut response = select_response(&true_role, &rng, ResponseType::Overflow);
                 match &mut response {
-                    Ok(s) | Err(s) => *s += "\nyou didn't set CARGO to something naughty, did you?\n",
+                    Ok(s) | Err(s) => {
+                        *s += "\nyou didn't set CARGO to something naughty, did you?\n"
+                    }
                 }
                 pretty_print(response);
-                return Ok(2)
+                return Ok(2);
             } else {
                 new_limit = n + 1;
             }
@@ -128,18 +130,18 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
                             new_bin_path.set_extension(ext);
                         }
                         if let Err(e) = std::fs::copy(bin_path, new_bin_path) {
-                            return Err(format!(
+                            Err(format!(
                                 "{role} couldn't copy {pronoun}self...\n{e:?}",
                                 role = ROLE.load(&true_role, &rng)?,
                                 pronoun = PRONOUN.load(&true_role, &rng)?,
-                            ))?;
+                            ))?
                         } else {
                             // Just exit immediately on success, don't try to get too clever here~
                             eprintln!("{true_role} is now {new_role}~");
                             return Ok(0);
                         }
                     } else {
-                        return Err(format!(
+                        Err(format!(
                             "{role} couldn't copy {pronoun}self...\n(couldn't find own parent dir)",
                             role = ROLE.load(&true_role, &rng)?,
                             pronoun = PRONOUN.load(&true_role, &rng)?,
@@ -152,7 +154,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Time for mommy to call cargo~
     let mut cmd = std::process::Command::new(cargo);
-    cmd.args(args).env(RECURSION_LIMIT_VAR, new_limit.to_string());
+    cmd.args(args)
+        .env(RECURSION_LIMIT_VAR, new_limit.to_string());
     let status = cmd.status()?;
     let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
