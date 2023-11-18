@@ -1,0 +1,6 @@
+{
+    "$schema": "https://github.com/axodotdev/oranda/releases/latest/download/oranda-config-schema.json",
+    "styles": {
+        "theme": "cupcake"
+    }
+}
