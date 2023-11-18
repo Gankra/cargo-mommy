@@ -130,6 +130,9 @@ mommy is starting to wonder if you should just give up and become her breeding s
 
 </details>
 
+-------
+
+
 # Licensing
 mommy likes freedom~ ❤️, and is dual-licensed under [MIT](LICENSE-MIT) and [Apache 2.0](LICENSE-APACHE).
 
