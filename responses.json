@@ -53,6 +53,9 @@
                 "Ah, failure? {role} will make sure the stars are right next time",
                 "Does {role}'s little {affectionate_term} need more time for worship~?",
                 "May the mark of the beast stain your flesh forever, {role} will haunt your soul forevermore"
+            ],
+            "overflow": [
+                "THOU HAST DRUNK TOO DEEPLY OF THE FONT"
             ]
         },
 
