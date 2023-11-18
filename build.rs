@@ -82,15 +82,14 @@ fn main() {
     let dest_path = Path::new(out_dir).join("responses.rs");
 
     let mut config: Config = serde_json::from_str(RESPONSES).unwrap();
-    for (i, (_, var)) in config.vars.iter_mut().enumerate() {
-        var.index = i;
-    }
-
+    let mut i = 0;
     let mut vars = String::new();
-    for (name, var) in &config.vars {
+    for (name, var) in config.vars.iter_mut() {
         if var.spiciness > Spiciness::CONFIGURED {
             continue;
         }
+        var.index = i;
+        i += 1;
 
         let env_key = var
             .env_key
