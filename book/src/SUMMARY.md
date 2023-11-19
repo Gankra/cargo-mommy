@@ -1,0 +1,18 @@
+# Summary
+
+- [Introduction](./README.md)
+- [Customizing](./customize/README.md)
+    - [Roles And Pronouns](./customize/roles-and-pronouns.md)
+    - [Moods](./customize/moods.md)
+    - [True Roles](./customize/true-roles.md)
+    - [NSFW Features](./customize/nsfw.md)
+    - [Removing NSFW Features](./customize/never-nsfw.md)
+- [Guides](./guides/README.md)
+    - [Powershell (Windows)](./guides/powershell.md)
+    - [Bash](./guides/bash.md)
+- [Contributing](./contributing/README.md)
+    - [Concepts](./contributing/concepts.md)
+    - [Adding New Messages](./contributing/adding-messages.md)
+    - [Adding A New Variable](./contributing/adding-variables.md)
+    - [Adding A New Mood](./contributing/adding-moods.md)
+
