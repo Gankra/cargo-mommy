@@ -16,5 +16,6 @@
     - [Adding New Messages](./contributing/adding-messages.md)
     - [Adding A New Variable](./contributing/adding-variables.md)
     - [Adding A New Mood](./contributing/adding-moods.md)
+    - [Locally Building The Website](./contributing/docs.md)
     - [Releasing](./contributing/releasing.md)
 
