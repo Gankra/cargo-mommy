@@ -47,7 +47,7 @@
             "positive": [
                 "What you have set in motion today will be remembered for aeons to come!",
                 "{role} will see to it that {pronoun} little {affectionate_term}'s name is feared~",
-                "{role} is proud of the evil seed {affectionate_term} has planted into this accursed world"
+                "{role} is proud of the evil seed {pronoun} {affectionate_term} has planted into this accursed world"
             ],
             "negative": [
                 "Ah, failure? {role} will make sure the stars are right next time",

@@ -4,8 +4,9 @@ At her heart, mommy exists to invoke cargo, check if the result was a success or
 Printing that message involves reading a bunch of configuration from env-vars to define pools of values to randomly select from, then:
 
 1. randomly [decide what mood the response should have](#moods)
-2. use the success/failure state to select which pool of answers from that mood to use (positive, negative, overflow)
-3. randomly select a message from that pool
+2. use the success/failure state to select which [pool of messages](#message-pools) from that mood to use
+3. randomly select [a message](#messages) from that pool
+4. randomly format the message's template with any [variables](#variables) it uses (plus the implicit emote)
 
 cargo-mommy has 3 major components~
 
@@ -19,7 +20,7 @@ The build.rs is extremely extra, but it's actually kind of useful for making it 
 
 ## Responses.json
 
-The ""schema"" of responses.json is currently the following (`$SOME_VALUE` here is an ~arbitrary string):
+The ""schema"" of [responses.json](https://github.com/Gankra/cargo-mommy/blob/main/responses.json) is currently the following (`$SOME_VALUE` here is an ~arbitrary string):
 
 ```text
 {
@@ -101,7 +102,7 @@ env_key is used to define a SCREAMING_CASE env-var `CARGO_{TRUE_ROLE}S_{ENV_KEY}
 
 If a variable's env-var isn't set, it will use its defaults as the pool. ("role" has no default value in responses.json because it has special logic to default to the [True Role](../customize/true-roles.md) when no custom roles are set.)
 
-If a variable's env-var *is* set, mommy will parse it as a ISO Standard Pronouns List, which is to say a slash-delimited list like "she/he/they", "girl/boy", or "daddy", and use those values as the pool.
+If a variable's env-var *is* set, mommy will parse it as [ISO Standard Pronoun Syntax](../customize/roles-and-pronouns.md), which is to say a slash-delimited list like "she/he/they", "girl/boy", or "daddy", and use those values as the pool.
 
 Each time mommy encounters a variable that needs to be substituted in a message, it will randomly select a new value from the pool.
 
