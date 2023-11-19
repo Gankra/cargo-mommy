@@ -1,6 +1,6 @@
 # Roles And Pronouns
 
-TODO: flesh this out
+Mommy knows you might not be a "girl", and might not want her to be a "mommy" or a "her"~
 
 Mommy will read the following environment variables to make her messages better for you~ ❤️
 
@@ -8,9 +8,10 @@ Mommy will read the following environment variables to make her messages better 
 * `CARGO_MOMMYS_PRONOUNS` - what pronouns mommy will use for themself~ (default: "her")
 * `CARGO_MOMMYS_ROLES` - what role mommy will have~ (default "mommy")
 * `CARGO_MOMMYS_EMOTES` - what emotes mommy will have~ (default "❤️/💖/💗/💓/💞")
-* `CARGO_MOMMYS_MOODS` - picks the set of possible responses~ (default: "chill", possible values "chill", "ominous")
 
-All of these options can take a `/` separated list. Mommy will randomly select one of them whenever she talks to you~
+See [the NSFW docs for additional spicier variables](./nsfw.md#variables)~
+
+All of these options take ISO Standard Pronoun Syntax, which is to say a slash-delimited list like "she/he/they", "girl/boy", or "daddy". Mommy will randomly select one of them whenever she talks to you~
 
 For example, the phrase "mommy loves her little girl~ 💞" is "CARGO_MOMMYS_ROLE loves CARGO_MOMMYS_PRONOUNS little CARGO_MOMMYS_LITTLE~"
 

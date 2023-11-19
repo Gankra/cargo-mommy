@@ -5,5 +5,17 @@
     },
     "build": {
         "path_prefix": "cargo-mommy"
+    },
+    "components": {
+        "artifacts": {
+            "package_managers": {
+                "preferred": {
+                    "cargo": "cargo install cargo-mommy"
+                },
+                "additional": {
+                    "cargo (clean strings)": "cargo install cargo-mommy --no-default-features"
+                }
+            }
+        }
     }
 }

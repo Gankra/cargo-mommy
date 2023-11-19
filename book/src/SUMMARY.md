@@ -10,9 +10,11 @@
 - [Guides](./guides/README.md)
     - [Powershell (Windows)](./guides/powershell.md)
     - [Bash](./guides/bash.md)
+    - [CI](./guides/ci.md)
 - [Contributing](./contributing/README.md)
     - [Concepts](./contributing/concepts.md)
     - [Adding New Messages](./contributing/adding-messages.md)
     - [Adding A New Variable](./contributing/adding-variables.md)
     - [Adding A New Mood](./contributing/adding-moods.md)
+    - [Releasing](./contributing/releasing.md)
 
