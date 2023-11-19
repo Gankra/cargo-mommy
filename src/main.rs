@@ -1,6 +1,7 @@
 #![allow(clippy::let_and_return)]
 
 use fastrand::Rng;
+use std::env;
 use std::io::IsTerminal;
 
 enum ResponseType {
@@ -29,8 +30,8 @@ fn main() {
 
 fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let rng = Rng::new();
-    let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_owned());
-    let mut arg_iter = std::env::args().peekable();
+
+    let mut arg_iter = env::args().peekable();
 
     // Understand who mommy really is~
     //
@@ -43,7 +44,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Interpret the argument as a path so we can manipulate it~
     let first_arg = arg_iter.next();
-    let bin_path = std::env::current_exe()
+    let bin_path = env::current_exe()
         .unwrap_or_else(|_| std::path::PathBuf::from(first_arg.unwrap_or_default()));
     // Get the extensionless-file name, and parse it case-insensitively~
     let bin_name = bin_path
@@ -58,10 +59,14 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         "mommy".to_owned()
     };
 
+    let cargo = env::var(format!("CARGO_{}S_ACTUAL", true_role.to_uppercase()))
+        .or_else(|_| env::var("CARGO"))
+        .unwrap_or_else(|_| "cargo".to_owned());
+
     // Check if someone has told mommy to keep calling herself~
     // Mommy loves you, darlings, but she can't keep running forever~
     let mut new_limit = 1;
-    if let Ok(limit) = std::env::var(RECURSION_LIMIT_VAR) {
+    if let Ok(limit) = env::var(RECURSION_LIMIT_VAR) {
         if let Ok(n) = limit.parse::<u8>() {
             if n > RECURSION_LIMIT {
                 let mut response = select_response(&true_role, &rng, ResponseType::Overflow);
@@ -294,7 +299,7 @@ impl Var<'_> {
     /// produces an in-character error message on failure.
     fn load(&self, true_role: &str, rng: &Rng) -> Result<String, String> {
         // try to load custom settings from env vars~
-        let var = std::env::var(self.env(true_role));
+        let var = env::var(self.env(true_role));
         let split;
 
         // parse the custom settings or use the builtins~
