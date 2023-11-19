@@ -22,7 +22,7 @@ Specifically if you change the True Role from "mommy" to e.g. "daddy", the follo
 * Instead of reading env vars like `CARGO_MOMMYS_MOODS` for config, it will read `CARGO_DADDYS_MOODS` (note the extra "S"!)
 * If `CARGO_{TRUE_ROLE}S_ROLE` isn't set, it will default to the True Role
 
-The value "daddy" is abitrary here, you can pick any value. Make yourself a `cargo burger-chimes` if you want!
+The value "daddy" is arbitrary here, you can pick any value. Make yourself a `cargo burger-chimes` if you want!
 
 All you have to do to change the True Role is to rename the cargo-mommy(.exe) binary to cargo-daddy(.exe).
 

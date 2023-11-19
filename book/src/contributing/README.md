@@ -2,7 +2,7 @@
 
 These are the technical rules of mommy club~
 
-* mommy as a project is always going to *default* to being mommy, and *default* to loving her little girl, even if she also does everything she can to be customized for people who don't want that~ 💖
+* mommy as a project is always going to *default* to being mommy, and *default* to loving her little girl, even if she also does everything she can to be customizable for people who don't want that~ 💖
 * there is no such thing as "being too extra" about mommy, mommy is so very overengineered and that is wonderful~ 💖
 * mommy is sfw and kind first and foremost, keep the hard stuff in [its corner](../customize/nsfw.md)~ 🖤
     * `--no-default-features` *has* to [make mommy forget how to be nsfw](../customize/never-nsfw.md)~
