@@ -1,16 +1,16 @@
 # Concepts
 
-At its heart, mommy exists to invoke cargo, check if the result was a success or failure, and print an appropriate message.
+At her heart, mommy exists to invoke cargo, check if the result was a success or failure, and print an appropriate message~
 Printing that message involves reading a bunch of configuration from env-vars to define pools of values to randomly select from, then:
 
-1. randomly [deciding what mood the response should have](#moods)
-2. using the success/failure state to select which pool of answer from that mood to use (positive, negative, overflow)
-3. randomly selecting a message from that pool
+1. randomly [decide what mood the response should have](#moods)
+2. use the success/failure state to select which pool of answers from that mood to use (positive, negative, overflow)
+3. randomly select a message from that pool
 
 cargo-mommy has 3 major components~
 
 1. [responses.json, where data lives](https://github.com/Gankra/cargo-mommy/blob/main/responses.json)
-2. [build.rs, that digests that data and coverts it to rust code](https://github.com/Gankra/cargo-mommy/blob/main/build.rs)
+2. [build.rs, that digests that data and converts it to rust code](https://github.com/Gankra/cargo-mommy/blob/main/build.rs)
 3. [main.rs, that handles execution](https://github.com/Gankra/cargo-mommy/blob/main/src/main.rs)
 
 The build.rs is extremely extra, but it's actually kind of useful for making it tolerable to [disable nsfw features](../customize/never-nsfw.md). In theory it also makes cargo-mommy very efficient and fast, which, again, is very extra.
@@ -46,7 +46,7 @@ The ""schema"" of responses.json is currently the following (`$SOME_VALUE` here 
 
 ### Moods
 
-Moods contain [pools of messages](#message-pools) with a particular feeling/intensity. This was originally introduced to allow the user to opt into [nsfw functionality](../customize/nsfw.md), but exists more generically than that, and we'd be happy to have more sfw moods like "furry" or whatever.
+Moods contain [pools of messages](#message-pools) with a particular feeling/intensity. This was originally introduced to allow the user to opt into [nsfw functionality](../customize/nsfw.md). Its functionality is more general than that, and we'd be happy to have more sfw moods like "furry" or whatever.
 
 The "chill" mood is the default mood, and is assumed to exist.
 

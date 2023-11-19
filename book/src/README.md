@@ -20,7 +20,7 @@ error: could not compile `bappy-script` (bin "bappy-script") due to previous err
 mommy knows her little girl can do better~ 💞
 ```
 
-By default mommy is kind to her little girl, but she can become anything you wants~
+By default mommy is kind to her little girl, but she can become anything you want~
 
 * [I want mommy to call myself or herself something else](./customize/roles-and-pronouns.md)
 * [I want `cargo mommy` to be `cargo daddy` (or anything else)](./customize/true-roles.md)
