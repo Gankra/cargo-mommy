@@ -1,11 +1,11 @@
 # Adding A New Variable
 
-You shouldn't need any code to add a new variable, just update [repsonses.json](https://github.com/Gankra/cargo-mommy/blob/main/responses.json) and the docs~
+You shouldn't need any code to add a new variable, just update [responses.json](https://github.com/Gankra/cargo-mommy/blob/main/responses.json) and the docs~
 
 
 ## Editing responses.json
 
-* Add [the new variable to reponses.json's "vars" object](./concepts.md#responsesjson)~
+* Add [the new variable to responses.json's "vars" object](./concepts.md#responsesjson)~
 * Fill in [the default values](./concepts.md#variables)~
 * If NSFW, be sure to set "spiciness"~
 * Use the variable in [existing or new messages](./concepts.md#variables)~
