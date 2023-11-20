@@ -5,6 +5,7 @@
     - [Roles And Pronouns](./customize/roles-and-pronouns.md)
     - [Moods](./customize/moods.md)
     - [True Roles](./customize/true-roles.md)
+    - [Not Just Cargo](./customize/not-just-cargo.md)
     - [NSFW Features](./customize/nsfw.md)
     - [Removing NSFW Features](./customize/never-nsfw.md)
 - [Guides](./guides/README.md)
