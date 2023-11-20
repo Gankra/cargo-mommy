@@ -3,6 +3,12 @@
 use fastrand::Rng;
 use std::env;
 use std::io::IsTerminal;
+use template::Config;
+
+mod template;
+
+#[cfg(feature = "runtime-responses")]
+mod json;
 
 enum ResponseType {
     Positive,
@@ -18,6 +24,9 @@ const RECURSION_LIMIT: u8 = 100;
 /// much of a mess~
 const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
 
+// Mommy generates CONFIG and other global constants in build.rs~
+include!(concat!(env!("OUT_DIR"), "/responses.rs"));
+
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
     // to support more little ones~
@@ -30,6 +39,7 @@ fn main() {
 
 fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let rng = Rng::new();
+    let config = &CONFIG;
 
     let mut arg_iter = env::args().peekable();
 
@@ -69,7 +79,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     if let Ok(limit) = env::var(RECURSION_LIMIT_VAR) {
         if let Ok(n) = limit.parse::<u8>() {
             if n > RECURSION_LIMIT {
-                let mut response = select_response(&true_role, &rng, ResponseType::Overflow);
+                let mut response =
+                    select_response(config, &true_role, &rng, ResponseType::Overflow);
                 match &mut response {
                     Ok(s) | Err(s) => {
                         *s += "\nyou didn't set CARGO to something naughty, did you?\n"
@@ -137,8 +148,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
                         if let Err(e) = std::fs::copy(bin_path, new_bin_path) {
                             Err(format!(
                                 "{role} couldn't copy {pronoun}self...\n{e:?}",
-                                role = ROLE.load(&true_role, &rng)?,
-                                pronoun = PRONOUN.load(&true_role, &rng)?,
+                                role = config.role().load(&true_role, &rng)?,
+                                pronoun = config.pronoun().load(&true_role, &rng)?,
                             ))?
                         } else {
                             // Just exit immediately on success, don't try to get too clever here~
@@ -148,8 +159,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
                     } else {
                         Err(format!(
                             "{role} couldn't copy {pronoun}self...\n(couldn't find own parent dir)",
-                            role = ROLE.load(&true_role, &rng)?,
-                            pronoun = PRONOUN.load(&true_role, &rng)?,
+                            role = config.role().load(&true_role, &rng)?,
+                            pronoun = config.pronoun().load(&true_role, &rng)?,
                         ))?;
                     }
                 }
@@ -169,9 +180,9 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Time for mommy to tell you how you did~
     let response = if status.success() {
-        select_response(&true_role, &rng, ResponseType::Positive)
+        select_response(config, &true_role, &rng, ResponseType::Positive)
     } else {
-        select_response(&true_role, &rng, ResponseType::Negative)
+        select_response(config, &true_role, &rng, ResponseType::Negative)
     };
     pretty_print(response);
 
@@ -202,15 +213,16 @@ fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
 }
 
 fn select_response(
+    config: &Config,
     true_role: &str,
     rng: &Rng,
     response_type: ResponseType,
 ) -> Result<String, String> {
     // Choose what mood mommy is in~
-    let mood = MOOD.load(true_role, rng)?;
+    let mood = config.mood().load(true_role, rng)?;
 
-    let Some(group) = &CONFIG.moods.iter().find(|group| group.name == mood) else {
-        let supported_moods_str = CONFIG
+    let Some(group) = &config.moods.iter().find(|group| group.name == mood) else {
+        let supported_moods_str = config
             .moods
             .iter()
             .map(|group| group.name)
@@ -218,8 +230,8 @@ fn select_response(
             .join(", ");
         return Err(format!(
             "{role} doesn't know how to feel {mood}... {pronoun} moods are {supported_moods_str}",
-            role = ROLE.load(true_role, rng)?,
-            pronoun = PRONOUN.load(true_role, rng)?,
+            role = config.role().load(true_role, rng)?,
+            pronoun = config.pronoun().load(true_role, rng)?,
         ));
     };
 
@@ -232,12 +244,12 @@ fn select_response(
     let response = &responses[rng.usize(..responses.len())];
 
     // Apply options to the message template~
-    let mut response = CONFIG.apply_template(true_role, response, rng)?;
+    let mut response = config.apply_template(true_role, response, rng)?;
 
     // Let mommy show a little emote~
     let should_emote = rng.bool();
     if should_emote {
-        if let Ok(emote) = EMOTE.load(true_role, rng) {
+        if let Ok(emote) = config.emote().load(true_role, rng) {
             response.push(' ');
             response.push_str(&emote);
         }
@@ -245,99 +257,6 @@ fn select_response(
 
     // Done~!
     Ok(response)
-}
-
-// Mommy generates CONFIG and other global constants in build.rs~
-include!(concat!(env!("OUT_DIR"), "/responses.rs"));
-
-struct Config<'a> {
-    vars: &'a [Var<'a>],
-    moods: &'a [Mood<'a>],
-}
-
-impl Config<'_> {
-    /// Applies a template by resolving `Chunk::Var`s against `self.vars`.
-    fn apply_template(
-        &self,
-        true_role: &str,
-        chunks: &[Chunk],
-        rng: &Rng,
-    ) -> Result<String, String> {
-        let mut out = String::new();
-        for chunk in chunks {
-            match chunk {
-                Chunk::Text(text) => out.push_str(text),
-                Chunk::Var(i) => out.push_str(&self.vars[*i].load(true_role, rng)?),
-            }
-        }
-        Ok(out)
-    }
-}
-
-struct Mood<'a> {
-    name: &'a str,
-    // Each of mommy's response templates is an alternating sequence of
-    // Text and Var chunks; Text is literal text that should be printed as-is;
-    // Var is an index into mommy's CONFIG.vars table~
-    positive: &'a [&'a [Chunk<'a>]],
-    negative: &'a [&'a [Chunk<'a>]],
-    overflow: &'a [&'a [Chunk<'a>]],
-}
-
-enum Chunk<'a> {
-    Text(&'a str),
-    Var(usize),
-}
-
-struct Var<'a> {
-    env_key: &'a str,
-    defaults: &'a [&'a str],
-}
-
-impl Var<'_> {
-    /// Loads this variable and selects one of the possible values for it;
-    /// produces an in-character error message on failure.
-    fn load(&self, true_role: &str, rng: &Rng) -> Result<String, String> {
-        // try to load custom settings from env vars~
-        let var = env::var(self.env(true_role));
-        let split;
-
-        // parse the custom settings or use the builtins~
-        let choices = match var.as_deref() {
-            Ok("") => &[],
-            Ok(value) => {
-                split = value.split('/').collect::<Vec<_>>();
-                split.as_slice()
-            }
-            Err(_) => self.defaults,
-        };
-
-        if choices.is_empty() {
-            // If there's no ROLES set, default to mommy's true nature~
-            if self.env_key == "ROLES" {
-                return Ok(true_role.to_owned());
-            }
-
-            // Otherwise, report an error~
-            let role = ROLE.load(true_role, rng)?;
-            return Err(format!(
-                "{role} needs at least one value for {}~",
-                self.env_key
-            ));
-        }
-
-        // now select a choice from the options~
-        Ok(choices[rng.usize(..choices.len())].to_owned())
-    }
-
-    /// Gets the name of the env var to load~
-    fn env(&self, true_role: &str) -> String {
-        // Normally we'd load from CARGO_MOMMYS_*
-        // but if cargo-mommy is cargo-daddy, we should load CARGO_DADDYS_* instead~
-        // If we have multiple words in our role, we must also be careful with spaces~
-        let screaming_role = true_role.to_ascii_uppercase().replace(' ', "_");
-        format!("CARGO_{screaming_role}S_{}", self.env_key)
-    }
 }
 
 #[cfg(test)]
