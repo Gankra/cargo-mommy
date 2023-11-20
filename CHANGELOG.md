@@ -1,6 +1,7 @@
 # Unreleased
 
-Nothing Yet!
+* [mommy now has a book~](https://faultlore.com/cargo-mommy/book/)
+* [mommy is easier to run with other things than cargo~](https://faultlore.com/cargo-mommy/book/customize/not-just-cargo.html)
 
 
 # Version 0.3.0 (2023-11-18)
