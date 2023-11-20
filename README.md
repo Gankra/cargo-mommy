@@ -36,19 +36,6 @@ mommy knows her little girl can do better~ 💞
 
 [See the docs for more options](https://faultlore.com/cargo-mommy/book/)
 
-If you try to make it into an alias, you should prefer pointing it to `cargo-mommy` directly,
-we wouldn't want to break the rustup toolchain picker, now would we?~
-
-If you want to use `cargo-mommy` for not-cargo programs, just set the `CARGO_{ROLE}S_ACTUAL`
-environment variable to it, for example
-
-```
-$ CARGO_MOMMYS_ACTUAL=date ./target/debug/cargo-mommy
-Sun Nov 19 05:33:34 PM CET 2023
-what a good girl you are~
-```
-
-mommy will also respect `CARGO` to execute the right cargo for you~
 
 # Configuration
 
