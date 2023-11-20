@@ -14,25 +14,25 @@ Mommy's release process is simple but does a lot~
 This will trigger this cascade of events:
 
 1. [cargo-release](https://github.com/crate-ci/cargo-release) will get the ball rolling:
-    a. [the changelog heading will be updated to "Version {version} ({date})"](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L50-L53)
-    b. the version in the Cargo.toml will be update to "{version}"
-    b. [a commit will be made with "release: {version}"](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L30)
-    c. [a "v{version}" git tag will be created](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L29)
-    d. `cargo publish` will be run
-    e. A more robust equivalent of `git push && git push --tags` will run
+    1. [the changelog heading will be updated to "Version {version} ({date})"](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L50-L53)
+    2. the version in the Cargo.toml will be update to "{version}"
+    3. [a commit will be made with "release: {version}"](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L30)
+    4. [a "v{version}" git tag will be created](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L29)
+    5. `cargo publish` will be run
+    6. A more robust equivalent of `git push && git push --tags` will run
 2. [cargo-dist](https://opensource.axo.dev/cargo-dist/) will see the tagged commit and build binaries/archives/installers/announcements:
-    a. [release.yml](https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/release.yml) will spawn
-    b. binaries and archives (zips/tarballs) will get built for [all supported targets](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L41)
-    c. [installers will be built](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L39) that can fetch the archives
-    d. A [Github Release](https://github.com/Gankra/cargo-mommy/releases) will be made, with the release notes and installers/archives
+    1. [release.yml](https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/release.yml) will spawn
+    2. binaries and archives (zips/tarballs) will get built for [all supported targets](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L41)
+    3. [installers will be built](https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L39) that can fetch the archives
+    4. A [Github Release](https://github.com/Gankra/cargo-mommy/releases) will be made, with the release notes and installers/archives
 3. [oranda](https://opensource.axo.dev/oranda/) will see a workflow called "Release" completed, and build and deploy docs
-    a. [web.yml](https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/web.yml) will spawn
-    b. [oranda will autodetect, retheme, and build](https://opensource.axo.dev/oranda/book/configuration/mdbook.html) the [cargo-mommy mdbook](https://github.com/Gankra/cargo-mommy/tree/main/src)
-    c. oranda will generate [a website with releases, the book, and a platform-autodetecting install widget for the latest release](https://faultlore.com/cargo-mommy/)
-    d. oranda will push the website to [the gh-pages branch](https://github.com/Gankra/cargo-mommy/tree/gh-pages)
+    1. [web.yml](https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/web.yml) will spawn
+    2. [oranda will autodetect, retheme, and build](https://opensource.axo.dev/oranda/book/configuration/mdbook.html) the [cargo-mommy mdbook](https://github.com/Gankra/cargo-mommy/tree/main/src)
+    3. oranda will generate [a website with releases, the book, and a platform-autodetecting install widget for the latest release](https://faultlore.com/cargo-mommy/)
+    4. oranda will push the website to [the gh-pages branch](https://github.com/Gankra/cargo-mommy/tree/gh-pages)
 4. Github Pages will trigger
-    a. [pages-build-deployment](https://github.com/Gankra/cargo-mommy/actions/workflows/pages/pages-build-deployment) will spawn
-    b. [the live website will update](https://faultlore.com/cargo-mommy/)
+    1. [pages-build-deployment](https://github.com/Gankra/cargo-mommy/actions/workflows/pages/pages-build-deployment) will spawn
+    2. [the live website will update](https://faultlore.com/cargo-mommy/)
 
 Note that steps 3 and 4 trigger on all pushes to main, so updating docs doesn't require a new release~
 

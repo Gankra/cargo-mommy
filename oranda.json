@@ -1,7 +1,8 @@
 {
     "$schema": "https://github.com/axodotdev/oranda/releases/latest/download/oranda-config-schema.json",
     "styles": {
-        "theme": "cupcake"
+        "theme": "axolight",
+        "favicon": "favicon.ico"
     },
     "build": {
         "path_prefix": "cargo-mommy"
