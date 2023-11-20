@@ -41,7 +41,10 @@ fn main() {
     let dest_path = Path::new(out_dir).join("responses.rs");
 
     let bump = bumpalo::Bump::new();
-    let config = json::Config::parse(RESPONSES).build(&bump);
+    let config = json::Config::parse("mommy", RESPONSES)
+        .unwrap()
+        .build("mommy", &bump)
+        .unwrap();
 
     fs::write(
         dest_path,

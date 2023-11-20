@@ -38,6 +38,7 @@ impl Config<'_> {
 
     /// Returns a valid Rust expression in a string representing this
     /// config's data.
+    #[allow(unused)]
     pub fn const_string(&self) -> String {
         format!("{:#?}", DebugByToConst(self))
     }

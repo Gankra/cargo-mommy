@@ -31,7 +31,7 @@ fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
     // to support more little ones~
     let code = real_main().unwrap_or_else(|e| {
-        eprintln!("Error: {e:?}");
+        pretty_print(Err(e.to_string()));
         1
     });
     std::process::exit(code)
@@ -39,7 +39,6 @@ fn main() {
 
 fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let rng = Rng::new();
-    let config = &CONFIG;
 
     let mut arg_iter = env::args().peekable();
 
@@ -67,6 +66,22 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     } else {
         // If something messed up is going on "mommy" will always take care of it~
         "mommy".to_owned()
+    };
+
+    // Mommy needs her config~
+    #[cfg(feature = "runtime-responses")]
+    let arena = bumpalo::Bump::new();
+    let config = match env::var(format!("CARGO_{}S_RESPONSES", true_role.to_uppercase())) {
+        #[cfg(feature = "runtime-responses")]
+        Ok(mut file_or_json) => {
+            if !file_or_json.starts_with('{') {
+                file_or_json = std::fs::read_to_string(&file_or_json)?;
+            }
+
+            let config = json::Config::parse(&true_role, &file_or_json)?;
+            &*arena.alloc(config.build(&true_role, &arena)?)
+        }
+        _ => &CONFIG,
     };
 
     let cargo = env::var(format!("CARGO_{}S_ACTUAL", true_role.to_uppercase()))

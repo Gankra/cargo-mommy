@@ -12,21 +12,36 @@ pub struct Config {
 
 impl Config {
     /// Parses a JSON config; see `responses.json`.
-    pub fn parse(data: &str) -> Self {
-        let mut config: Self = serde_json::from_str(data).unwrap();
-        for (i, (_, var)) in config.vars.iter_mut().enumerate() {
+    pub fn parse(true_role: &str, data: &str) -> Result<Self, String> {
+        let mut config: Self = serde_json::from_str(data)
+            .map_err(|e| format!("the JSON blob you gave {true_role} seems to be invalid~\n{e}"))?;
+
+        let mut i = 0;
+        for (_, var) in &mut config.vars {
+            if var.spiciness > Spiciness::CONFIGURED {
+                continue;
+            }
+
             var.index = i;
+            i += 1;
         }
-        config
+
+        Ok(config)
     }
 
-    fn var_index(&self, name: &str) -> usize {
-        self.vars[name].index
+    fn var_index(&self, true_role: &str, name: &str) -> Result<usize, String> {
+        self.vars.get(name).map(|v| v.index).ok_or_else(|| {
+            format!("{true_role} really needs a variable named {name:?} in order to work properly~")
+        })
     }
 
     /// Builds a "real" config. This mostly consists of converting formatting
     /// strings into something simpler to interpolate strings into.
-    pub fn build<'a>(&self, arena: &'a Bump) -> crate::template::Config<'a> {
+    pub fn build<'a>(
+        &self,
+        true_role: &str,
+        arena: &'a Bump,
+    ) -> Result<crate::template::Config<'a>, String> {
         use crate::template::*;
 
         let mut vars = Vec::new();
@@ -58,7 +73,8 @@ impl Config {
                 continue;
             }
 
-            let parse_response = |text: &str| -> &'a [Chunk<'a>] {
+            let mut error = None;
+            let mut parse_response = |text: &str| -> &'a [Chunk<'a>] {
                 let mut out = Vec::new();
 
                 // Mommy has to the template on matches for `pattern`, and generate
@@ -68,10 +84,11 @@ impl Config {
                     let var_name = &var.as_str()[1..var.len() - 1];
                     let var_idx = match self.vars.get(var_name) {
                         Some(var) => {
-                            assert!(
-                                var.spiciness <= Spiciness::CONFIGURED,
-                                "{{{var_name}}} is too spicy!"
-                            );
+                            if var.spiciness > Spiciness::CONFIGURED && error.is_none() {
+                                error = Some(format!(
+                                    "{{{var_name}}} is a little too spicy for {true_role}~"
+                                ));
+                            }
                             var.index
                         }
                         None => panic!("undeclared variable {{{var_name}}}"),
@@ -113,18 +130,22 @@ impl Config {
                         .collect::<Vec<_>>(),
                 ),
             });
+
+            if let Some(error) = error {
+                return Err(error);
+            }
         }
 
-        Config {
+        Ok(Config {
             vars: arena.alloc_slice_copy(&vars),
             moods: arena.alloc_slice_copy(&moods),
 
             // Mommy needs some hard-coded vars at a specific location~
-            mood: self.var_index("mood"),
-            emote: self.var_index("emote"),
-            pronoun: self.var_index("pronoun"),
-            role: self.var_index("role"),
-        }
+            mood: self.var_index(true_role, "mood")?,
+            emote: self.var_index(true_role, "emote")?,
+            pronoun: self.var_index(true_role, "pronoun")?,
+            role: self.var_index(true_role, "role")?,
+        })
     }
 }
 
