@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-mommy"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "fastrand",
  "regex",
