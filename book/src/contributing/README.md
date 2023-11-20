@@ -19,6 +19,6 @@ These are the social rules of mommy club~
 
 For most contributions, you probably just need to [edit responses.json](https://github.com/Gankra/cargo-mommy/blob/main/responses.json)~
 
-See the next pages for details~
+See the sub-pages for details~
 
 

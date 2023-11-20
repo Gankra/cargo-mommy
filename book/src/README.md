@@ -26,5 +26,6 @@ By default mommy is kind to her little girl, but she can become anything you wan
 * [I want `cargo mommy` to be `cargo daddy` (or anything else)](./customize/true-roles.md)
 * [I want mommy to work with our plurality](./customize/true-roles.md)
 * [I want mommy to have a totally different mood](./customize/moods.md)
+* [I want mommy to invoke mommy with more than cargo](./customize/not-just-cargo.md)
 * [I want mommy to sdsdfdsfdfsd me (enabling nsfw features)](./customize/nsfw.md)
 * [I never want mommy to sdsdfdsfdfsd me (compiling out all nsfw features)](./customize/never-nsfw.md)
