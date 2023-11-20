@@ -1,10 +1,10 @@
 # Adding A New Mood
 
-You shouldn't need any code to add a mood, just update [repsonses.json](https://github.com/Gankra/cargo-mommy/blob/main/responses.json) and the docs~
+You shouldn't need any code to add a mood, just update [responses.json](https://github.com/Gankra/cargo-mommy/blob/main/responses.json) and the docs~
 
 ## Editing responses.json
 
-* Add [the new mood to reponses.json's "moods" object](./concepts.md#responsesjson)~
+* Add [the new mood to responses.json's "moods" object](./concepts.md#responsesjson)~
 * Fill in as many messages as you can think of for [the message pools](./concepts.md#message-pools)~
 * If NSFW, be sure to set "spiciness"~
 

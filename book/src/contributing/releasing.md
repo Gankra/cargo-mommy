@@ -47,7 +47,7 @@ The cargo-dist step was created by locally running `cargo dist init`, selecting 
 
 The oranda step was created by running `oranda generate ci`, selecting some of the options, and committing the results. A [custom oranda.json](https://github.com/Gankra/cargo-mommy/blob/main/oranda.json) was then added to fix path-prefix with github-pages, and to pick a non-default theme. The CI is setup to always use the "latest" oranda, so it's self-updating and may never need to be touched. Any changes that are desired will probably be changes to oranda.json.
 
-The Github Pages step was doing in the Github settings UI for cargo-mommy. The website it deploys to is Gankra's.
+The Github Pages step was done in the Github Settings UI for the cargo-mommy repo. The website it deploys to is Gankra's.
 
 
 
