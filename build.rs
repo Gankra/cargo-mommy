@@ -1,10 +1,10 @@
-//! Code that statically parses responses.json and adds it to the codebase~
+//! Code that statically parses responses.kdl and adds it to the codebase~
 //!
 //! This allows the binary to only include what it needs, both perf-wise
 //! and oh-god-i-found-these-strings-in-this-binary-wise.
 //!
 //! How to add a new mood, simply add a new entry to the `moods` object in
-//! `responses.json`. Make sure to add `vars` entries for any new variables you
+//! `responses.kdl`. Make sure to add `vars` entries for any new variables you
 //! introduce.
 //!
 //! If your new mood or variable include... "spicy" terms, make sure to set an
@@ -17,12 +17,17 @@ use std::fs;
 use std::ops::Range;
 use std::path::Path;
 
+use knuffel::ast::SpannedNode;
+use knuffel::decode::Context;
+use knuffel::errors::DecodeError;
+use knuffel::traits::ErrorSpan;
+use knuffel::Decode;
 use regex::Regex;
 
-const RESPONSES: &str = include_str!("./responses.json");
+const RESPONSES: &str = include_str!("./responses.kdl");
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, serde::Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[derive(PartialEq, Eq, PartialOrd, Ord, knuffel::DecodeScalar, Copy, Clone)]
+// TODO: #[serde(rename_all = "snake_case")]
 enum Spiciness {
     Chill,
     Thirsty,
@@ -45,43 +50,71 @@ impl Default for Spiciness {
     }
 }
 
-#[derive(serde::Deserialize)]
+#[derive(knuffel::Decode)]
 struct Mood {
+    #[knuffel(child, unwrap(arguments))]
     positive: Vec<String>,
+    #[knuffel(child, unwrap(arguments))]
     negative: Vec<String>,
+    #[knuffel(child, unwrap(arguments))]
     overflow: Vec<String>,
 
-    #[serde(default)]
+    #[knuffel(child, default, unwrap(argument))]
     spiciness: Spiciness,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(knuffel::Decode)]
 struct Var {
+    #[knuffel(child, unwrap(arguments))]
     defaults: Vec<String>,
-    #[serde(default)]
+    #[knuffel(child, unwrap(argument))]
     env_key: Option<String>,
-
-    #[serde(default)]
+    #[knuffel(child, default, unwrap(argument))]
     spiciness: Spiciness,
 
     // Mommy needs a way to reference variables by index when doing template
     // substitution. This type is the value of an ordered map, so we can just
     // stick an index in after parsing~
-    #[serde(skip)]
     index: usize,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(knuffel::Decode)]
 struct Config {
-    vars: BTreeMap<String, Var>,
-    moods: BTreeMap<String, Mood>,
+    #[knuffel(child)]
+    vars: KdlMap<Var>,
+    #[knuffel(child)]
+    moods: KdlMap<Mood>,
 }
 
-fn main() {
+struct KdlMap<V>(BTreeMap<String, V>);
+impl<V: Decode<S>, S: ErrorSpan> Decode<S> for KdlMap<V> {
+    fn decode_node(node: &SpannedNode<S>, ctx: &mut Context<S>) -> Result<Self, DecodeError<S>> {
+        let mut result = BTreeMap::<String, V>::new();
+        for child in node.children() {
+            let key = &child.node_name;
+            let val = V::decode_node(child, ctx)?;
+            result.insert(key.to_string(), val);
+        }
+        Ok(Self(result))
+    }
+}
+impl<V> std::ops::Deref for KdlMap<V> {
+    type Target = BTreeMap<String, V>;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl<V> std::ops::DerefMut for KdlMap<V> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+fn main() -> Result<(), miette::Report> {
     let out_dir = &env::var("OUT_DIR").unwrap();
     let dest_path = Path::new(out_dir).join("responses.rs");
 
-    let mut config: Config = serde_json::from_str(RESPONSES).unwrap();
+    let mut config: Config = knuffel::parse("responses.kdl", RESPONSES)?;
     let mut i = 0;
     let mut vars = String::new();
     for (name, var) in config.vars.iter_mut() {
@@ -104,7 +137,7 @@ fn main() {
 
     let pattern = Regex::new(r"\{\w+\}").unwrap();
     let mut responses = String::new();
-    for (name, mood) in &config.moods {
+    for (name, mood) in &*config.moods {
         if mood.spiciness > Spiciness::CONFIGURED {
             continue;
         }
@@ -176,5 +209,7 @@ fn main() {
     )
     .unwrap();
 
-    println!("cargo:rerun-if-changed=responses.json");
+    println!("cargo:rerun-if-changed=responses.kdl");
+
+    Ok(())
 }
