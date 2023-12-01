@@ -17,7 +17,7 @@ impl Config {
             .map_err(|e| format!("the JSON blob you gave {true_role} seems to be invalid~\n{e}"))?;
 
         let mut i = 0;
-        for (_, var) in &mut config.vars {
+        for var in config.vars.values_mut() {
             if var.spiciness > Spiciness::CONFIGURED {
                 continue;
             }
