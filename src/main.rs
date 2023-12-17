@@ -3,6 +3,7 @@
 use fastrand::Rng;
 use std::env;
 use std::io::IsTerminal;
+use std::path::PathBuf;
 
 enum ResponseType {
     Positive,
@@ -171,14 +172,33 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
-    // I don't think should be too smart about file errors.
-    let needs_beg = check_need_beg(&rng)?;
+    // mommy probably shouldn't be too smart with file system errors
+    let mut maybe_beg = match check_need_beg(&rng) {
+        Err(err) => {
+            eprintln!(
+                "\x1b[1m{} fought against the file system and lost~\x1b[0m",
+                ROLE.load(&true_role, &rng)?
+            );
+            Err(err)?
+        }
+        Ok(beg) => beg,
+    };
 
-    let (status, code) = if begging || !needs_beg.is_needed() {
-        // TODO: Add special handling for if a pet is begging on the first time
-        // Because that means they are begging more than needed.
-        // Which can be ok.
-        // But also may not. Depending on mommy's mood.
+    let (response_kind, code) = if begging || maybe_beg.is_not_needed() {
+        let _ = match maybe_beg.needs {
+            NeedsBeg::Needed(BegKind::First) if begging => {
+                // TODO: Add special handling for if a pet is begging on the first time
+                // Because that means they are begging more than needed.
+                // Which can be ok.
+                // But also may not. Depending on mommy's mood.
+
+                Some(())
+            }
+            NeedsBeg::Needed(_) => None,
+            NeedsBeg::NotNeeded => None,
+        };
+
+        maybe_beg.remove_lock()?;
 
         // Time for mommy to call cargo~
         let mut cmd = std::process::Command::new(cargo);
@@ -200,13 +220,12 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         )
     } else {
         // uh oh, someone isn't begging like they need to~
-        // TODO: Handling if mommy's pet doesn't beg~
 
         (ResponseType::FirstBeg, 69)
     };
 
     // Time for mommy to tell you how you did~
-    let response = select_response(&true_role, &rng, status);
+    let response = select_response(&true_role, &rng, response_kind);
 
     pretty_print(response);
 
@@ -247,52 +266,66 @@ enum NeedsBeg {
     Needed(BegKind),
 }
 
-impl NeedsBeg {
+/// whether mommy needs her pet to beg, and how to create a lock if they do.
+struct BegCtx {
+    /// Whether or not mommy requires begging
+    needs: NeedsBeg,
+
+    /// Path to the lock file that may or may not exist
+    path: PathBuf,
+}
+
+impl BegCtx {
     #[must_use]
-    fn is_needed(&self) -> bool {
-        matches!(self, Self::Needed(..))
+    fn is_not_needed(&self) -> bool {
+        matches!(self.needs, NeedsBeg::NotNeeded)
+    }
+
+    /// Remove a lock file
+    fn remove_lock(&mut self) -> Result<(), std::io::Error> {
+        std::fs::remove_file(&self.path)
     }
 }
 
 /// does mommy need a little extra~?
-fn check_need_beg(rng: &Rng) -> Result<NeedsBeg, std::io::Error> {
-    // Fast path if mommy's pet is always good~
-    if BEG_CHANCE == 0 {
-        return Ok(NeedsBeg::NotNeeded);
-    }
-
-    // Check if lock file exists.
+fn check_need_beg(rng: &Rng) -> Result<BegCtx, std::io::Error> {
     // TODO(?): Make this configurable where it's placed
-    let lock_file = {
+    let lock_file_path = {
         let mut file = home::cargo_home()?;
         file.push("MOMMY.lock");
         file
     };
 
+    // Fast path if mommy's pet is always good~
+    if BEG_CHANCE == 0 {
+        return Ok(BegCtx {
+            needs: NeedsBeg::NotNeeded,
+            path: lock_file_path,
+        });
+    }
+
     let beg_pick = rng.u8(..100);
 
-    if beg_pick < BEG_CHANCE {
-        // mommy needs some enthusiasm~
+    // Unconditionally create lock file to try and mitigate mitigate funny toctou
+    let maybe_lock = std::fs::OpenOptions::new()
+        .create_new(true)
+        .append(true)
+        .open(&lock_file_path);
 
-        let maybe_lock = std::fs::OpenOptions::new().create_new(true).open(lock_file);
-
-        match maybe_lock {
-            Ok(_) => Ok(NeedsBeg::Needed(BegKind::First)),
-            Err(err) if err.kind() == std::io::ErrorKind::AlreadyExists => {
-                Ok(NeedsBeg::Needed(BegKind::NotFirst))
-            }
-            Err(err) => Err(err),
-        }
-    } else {
-        // not out of the water yet. Must check if the lock exists.
-
-        let lock_exists = lock_file.try_exists();
-
-        match lock_exists {
-            Ok(true) => Ok(NeedsBeg::Needed(BegKind::NotFirst)),
-            Ok(false) => Ok(NeedsBeg::NotNeeded),
-            Err(err) => Err(err),
-        }
+    match maybe_lock {
+        Ok(file) => Ok(BegCtx {
+            needs: if beg_pick < BEG_CHANCE {
+                NeedsBeg::Needed(BegKind::First)
+            } else {
+                NeedsBeg::NotNeeded
+            },
+            path: lock_file_path,
+        }),
+        Err(err) if err.kind() == std::io::ErrorKind::AlreadyExists => Ok(BegCtx {
+            needs: NeedsBeg::Needed(BegKind::NotFirst),
+            path: lock_file_path,
+        }),
+        Err(err) => Err(err),
     }
 }
 
