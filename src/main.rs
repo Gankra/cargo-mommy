@@ -21,9 +21,6 @@ const RECURSION_LIMIT: u8 = 100;
 /// much of a mess~
 const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
 
-/// Currently just a constant percentage chance
-const BEG_CHANCE: u8 = 50;
-
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
     // to support more little ones~
@@ -173,8 +170,11 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
+
+    let beg_chance = BEG_CHANCE.load(&true_role, &rng)?.parse()?;
+
     // mommy probably shouldn't be too smart with file system errors
-    let mut maybe_beg = match check_need_beg(&rng) {
+    let mut maybe_beg = match check_need_beg(&rng, beg_chance) {
         Err(err) => {
             eprintln!(
                 "\x1b[1m{} fought against the file system and lost~\x1b[0m",
@@ -290,7 +290,7 @@ impl BegCtx {
 }
 
 /// does mommy need a little extra~?
-fn check_need_beg(rng: &Rng) -> Result<BegCtx, std::io::Error> {
+fn check_need_beg(rng: &Rng, beg_chance: u8) -> Result<BegCtx, std::io::Error> {
     // TODO(?): Make this configurable where it's placed
     let lock_file_path = {
         let mut file = home::cargo_home()?;
@@ -299,7 +299,7 @@ fn check_need_beg(rng: &Rng) -> Result<BegCtx, std::io::Error> {
     };
 
     // Fast path if mommy's pet is always good~
-    if BEG_CHANCE == 0 {
+    if beg_chance == 0 {
         return Ok(BegCtx {
             needs: NeedsBeg::NotNeeded,
             path: lock_file_path,
@@ -316,7 +316,7 @@ fn check_need_beg(rng: &Rng) -> Result<BegCtx, std::io::Error> {
 
     match maybe_lock {
         Ok(_) => Ok(BegCtx {
-            needs: if beg_pick < BEG_CHANCE {
+            needs: if beg_pick < beg_chance {
                 NeedsBeg::Needed(BegKind::First)
             } else {
                 NeedsBeg::NotNeeded
