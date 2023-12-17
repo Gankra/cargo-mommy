@@ -186,20 +186,17 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     };
 
     let (response_kind, code) = if begging || maybe_beg.is_not_needed() {
-        let _ = match maybe_beg.needs {
-            NeedsBeg::Needed(BegKind::First) if begging => {
-                // TODO: Add special handling for if a pet is begging on the first time
-                // Because that means they are begging more than needed.
-                // Which can be ok.
-                // But also may not. Depending on mommy's mood.
-
-                Some(())
-            }
-            NeedsBeg::Needed(_) => None,
-            NeedsBeg::NotNeeded => None,
+        // Can add handling for if they are begging at the first required beg.
+        // Because that means they are begging more than they need to.
+        //
+        // This could be good or bad. Depending on mommy's mood.
+        if let Err(err) = maybe_beg.remove_lock() {
+            eprintln!(
+                "\x1b[1m{} fought against the file system and lost~\x1b[0m",
+                ROLE.load(&true_role, &rng)?
+            );
+            Err(err)?
         };
-
-        maybe_beg.remove_lock()?;
 
         // Time for mommy to call cargo~
         let mut cmd = std::process::Command::new(cargo);
@@ -225,7 +222,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         match maybe_beg.needs {
             NeedsBeg::Needed(BegKind::First) => (ResponseType::FirstBeg, 69),
             NeedsBeg::Needed(BegKind::NotFirst) => (ResponseType::DidNotBeg, 69),
-            NeedsBeg::NotNeeded => unreachable!("mommy cannot reach this case~"),
+            NeedsBeg::NotNeeded => unreachable!("mommy cannot reach this case~ someone did something naught and needs a spanking~"),
         }
     };
 
