@@ -10,6 +10,7 @@ enum ResponseType {
     Negative,
     Overflow,
     FirstBeg,
+    DidNotBeg,
 }
 
 /// Mommy intentionally lets her little ones call her recursively, since they might want to hear more from her~
@@ -221,7 +222,11 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     } else {
         // uh oh, someone isn't begging like they need to~
 
-        (ResponseType::FirstBeg, 69)
+        match maybe_beg.needs {
+            NeedsBeg::Needed(BegKind::First) => (ResponseType::FirstBeg, 69),
+            NeedsBeg::Needed(BegKind::NotFirst) => (ResponseType::DidNotBeg, 69),
+            NeedsBeg::NotNeeded => unreachable!("mommy cannot reach this case~"),
+        }
     };
 
     // Time for mommy to tell you how you did~
@@ -313,7 +318,7 @@ fn check_need_beg(rng: &Rng) -> Result<BegCtx, std::io::Error> {
         .open(&lock_file_path);
 
     match maybe_lock {
-        Ok(file) => Ok(BegCtx {
+        Ok(_) => Ok(BegCtx {
             needs: if beg_pick < BEG_CHANCE {
                 NeedsBeg::Needed(BegKind::First)
             } else {
@@ -357,6 +362,8 @@ fn select_response(
         ResponseType::Negative => group.negative,
         ResponseType::Overflow => group.overflow,
         ResponseType::FirstBeg => group.beg_first,
+        // TODO: Implement this category
+        ResponseType::DidNotBeg => group.beg_first,
     };
     let response = &responses[rng.usize(..responses.len())];
 
