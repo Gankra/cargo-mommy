@@ -50,7 +50,7 @@ struct Mood {
     positive: Vec<String>,
     negative: Vec<String>,
     overflow: Vec<String>,
-
+    beg_first: Vec<String>,
     #[serde(default)]
     spiciness: Spiciness,
 }
@@ -148,6 +148,10 @@ fn main() {
         }
         let _ = write!(responses, "], overflow: &[");
         for response in &mood.overflow {
+            parse_response(response, &mut responses)
+        }
+        let _ = write!(responses, "], beg_first: &[");
+        for response in &mood.beg_first {
             parse_response(response, &mut responses)
         }
         let _ = write!(responses, "] }},");

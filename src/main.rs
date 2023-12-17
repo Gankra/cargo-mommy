@@ -341,6 +341,7 @@ struct Mood<'a> {
     positive: &'a [&'a [Chunk<'a>]],
     negative: &'a [&'a [Chunk<'a>]],
     overflow: &'a [&'a [Chunk<'a>]],
+    beg_first: &'a [&'a [Chunk<'a>]],
 }
 
 enum Chunk<'a> {
