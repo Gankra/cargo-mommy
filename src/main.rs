@@ -171,7 +171,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     }
 
 
-    let beg_chance = BEG_CHANCE.load(&true_role, &rng)?.parse()?;
+    let beg_chance = BEG_CHANCE.load(&true_role, &rng)?.parse().unwrap_or(20);
 
     // mommy probably shouldn't be too smart with file system errors
     let mut maybe_beg = match check_need_beg(&rng, beg_chance) {
