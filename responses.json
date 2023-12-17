@@ -177,6 +177,9 @@
         "part": {
             "spiciness": "yikes",
             "defaults": ["milk"]
+        },
+        "beg_chance": {
+            "defaults": ["5"]
         }
     }
 }
