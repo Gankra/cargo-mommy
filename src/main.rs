@@ -20,7 +20,7 @@ const RECURSION_LIMIT: u8 = 100;
 const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
 
 /// Currently just a constant percentage chance
-const BEG_CHANCE: u8 = 5;
+const BEG_CHANCE: u8 = 50;
 
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
@@ -171,9 +171,10 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
-    let needs_beg = check_need_beg(&rng);
+    // I don't think should be too smart about file errors.
+    let needs_beg = check_need_beg(&rng)?;
 
-    let (status, code) = if begging || !needs_beg.need {
+    let (status, code) = if begging || !needs_beg.is_needed() {
         // TODO: Add special handling for if a pet is begging on the first time
         // Because that means they are begging more than needed.
         // Which can be ok.
@@ -241,20 +242,57 @@ enum BegKind {
     NotFirst,
 }
 
-struct NeedsBeg {
-    kind: BegKind,
-    need: bool,
+enum NeedsBeg {
+    NotNeeded,
+    Needed(BegKind),
 }
 
-/// Returns true if mommy's pet needs to beg~
-fn check_need_beg(rng: &Rng) -> NeedsBeg {
+impl NeedsBeg {
+    #[must_use]
+    fn is_needed(&self) -> bool {
+        matches!(self, Self::Needed(..))
+    }
+}
+
+/// does mommy need a little extra~?
+fn check_need_beg(rng: &Rng) -> Result<NeedsBeg, std::io::Error> {
+    // Fast path if mommy's pet is always good~
+    if BEG_CHANCE == 0 {
+        return Ok(NeedsBeg::NotNeeded);
+    }
+
+    // Check if lock file exists.
+    // TODO(?): Make this configurable where it's placed
+    let lock_file = {
+        let mut file = home::cargo_home()?;
+        file.push("MOMMY.lock");
+        file
+    };
+
     let beg_pick = rng.u8(..100);
 
-    // TODO: Add a lock file to mommy so she knows that a pet needs to beg~
+    if beg_pick < BEG_CHANCE {
+        // mommy needs some enthusiasm~
 
-    NeedsBeg {
-        kind: BegKind::First,
-        need: beg_pick < BEG_CHANCE,
+        let maybe_lock = std::fs::OpenOptions::new().create_new(true).open(lock_file);
+
+        match maybe_lock {
+            Ok(_) => Ok(NeedsBeg::Needed(BegKind::First)),
+            Err(err) if err.kind() == std::io::ErrorKind::AlreadyExists => {
+                Ok(NeedsBeg::Needed(BegKind::NotFirst))
+            }
+            Err(err) => Err(err),
+        }
+    } else {
+        // not out of the water yet. Must check if the lock exists.
+
+        let lock_exists = lock_file.try_exists();
+
+        match lock_exists {
+            Ok(true) => Ok(NeedsBeg::Needed(BegKind::NotFirst)),
+            Ok(false) => Ok(NeedsBeg::NotNeeded),
+            Err(err) => Err(err),
+        }
     }
 }
 
