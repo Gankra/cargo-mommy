@@ -46,7 +46,7 @@ Mommy will read the following environment variables to make her messages better 
 * `CARGO_MOMMYS_ROLES` - what role mommy will have~ (default "mommy")
 * `CARGO_MOMMYS_EMOTES` - what emotes mommy will have~ (default "❤️/💖/💗/💓/💞")
 * `CARGO_MOMMYS_MOODS` - picks the set of possible responses~ (default: "chill", possible values "chill", "ominous")
-* `CARGO_MOMMYS_BEG_CHANCES` - Percentage chance that mommy will make you beg (add "please" after "mommy")
+* `CARGO_MOMMYS_BEG_CHANCES` - Percentage chance that mommy will make you beg for it~ (meaing add "please" after "mommy", default: 0)
 
 All of these options can take a `/` separated list. Mommy will randomly select one of them whenever she talks to you~
 

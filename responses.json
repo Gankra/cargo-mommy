@@ -190,7 +190,7 @@
             "defaults": ["milk"]
         },
         "beg_chance": {
-            "defaults": ["5"]
+            "defaults": ["0"]
         }
     }
 }
