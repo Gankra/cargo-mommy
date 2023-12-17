@@ -8,6 +8,7 @@ enum ResponseType {
     Positive,
     Negative,
     Overflow,
+    FirstBeg,
 }
 
 /// Mommy intentionally lets her little ones call her recursively, since they might want to hear more from her~
@@ -17,6 +18,9 @@ const RECURSION_LIMIT: u8 = 100;
 /// This name is intentionally not user-configurable. Mommy can't let the little ones make *too*
 /// much of a mess~
 const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
+
+/// Currently just a constant percentage chance
+const BEG_CHANCE: u8 = 5;
 
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
@@ -99,6 +103,16 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         let _ = arg_iter.next();
     }
 
+    // Sometimes mommy will decide to make you beg. So we have to check to make sure that if we
+    // are to pop that argument off. But also note that it is ok to beg even if not required~
+
+    let begging = if arg_iter.peek().map_or(false, |arg| arg == "please") {
+        let _ = arg_iter.next();
+        true
+    } else {
+        false
+    };
+
     // *WHEEZES*
     //
     // *PANTS FOR A MINUTE*
@@ -157,22 +171,42 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
-    // Time for mommy to call cargo~
-    let mut cmd = std::process::Command::new(cargo);
-    cmd.args(args)
-        .env(RECURSION_LIMIT_VAR, new_limit.to_string());
-    let status = cmd.status()?;
-    let code = status.code().unwrap_or(1);
-    if is_quiet_mode_enabled(cmd.get_args()) {
-        return Ok(code);
-    }
+    let needs_beg = check_need_beg(&rng);
+
+    let (status, code) = if begging || !needs_beg.need {
+        // TODO: Add special handling for if a pet is begging on the first time
+        // Because that means they are begging more than needed.
+        // Which can be ok.
+        // But also may not. Depending on mommy's mood.
+
+        // Time for mommy to call cargo~
+        let mut cmd = std::process::Command::new(cargo);
+        cmd.args(args)
+            .env(RECURSION_LIMIT_VAR, new_limit.to_string());
+        let status = cmd.status()?;
+        let code = status.code().unwrap_or(1);
+        if is_quiet_mode_enabled(cmd.get_args()) {
+            return Ok(code);
+        }
+
+        (
+            if status.success() {
+                ResponseType::Positive
+            } else {
+                ResponseType::Negative
+            },
+            code,
+        )
+    } else {
+        // uh oh, someone isn't begging like they need to~
+        // TODO: Handling if mommy's pet doesn't beg~
+
+        (ResponseType::FirstBeg, 69)
+    };
 
     // Time for mommy to tell you how you did~
-    let response = if status.success() {
-        select_response(&true_role, &rng, ResponseType::Positive)
-    } else {
-        select_response(&true_role, &rng, ResponseType::Negative)
-    };
+    let response = select_response(&true_role, &rng, status);
+
     pretty_print(response);
 
     Ok(code)
@@ -199,6 +233,29 @@ fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
     }
 
     false
+}
+
+/// Mommy should be able to tell if this is her first time asking for a pet to beg~
+enum BegKind {
+    First,
+    NotFirst,
+}
+
+struct NeedsBeg {
+    kind: BegKind,
+    need: bool,
+}
+
+/// Returns true if mommy's pet needs to beg~
+fn check_need_beg(rng: &Rng) -> NeedsBeg {
+    let beg_pick = rng.u8(..100);
+
+    // TODO: Add a lock file to mommy so she knows that a pet needs to beg~
+
+    NeedsBeg {
+        kind: BegKind::First,
+        need: beg_pick < BEG_CHANCE,
+    }
 }
 
 fn select_response(
@@ -228,6 +285,8 @@ fn select_response(
         ResponseType::Positive => group.positive,
         ResponseType::Negative => group.negative,
         ResponseType::Overflow => group.overflow,
+        // TODO: Add real responses.
+        ResponseType::FirstBeg => group.negative,
     };
     let response = &responses[rng.usize(..responses.len())];
 
