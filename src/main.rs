@@ -3,11 +3,14 @@
 use fastrand::Rng;
 use std::env;
 use std::io::IsTerminal;
+use std::path::PathBuf;
 
 enum ResponseType {
     Positive,
     Negative,
     Overflow,
+    FirstBeg,
+    DidNotBeg,
 }
 
 /// Mommy intentionally lets her little ones call her recursively, since they might want to hear more from her~
@@ -17,6 +20,9 @@ const RECURSION_LIMIT: u8 = 100;
 /// This name is intentionally not user-configurable. Mommy can't let the little ones make *too*
 /// much of a mess~
 const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
+
+/// The lock file name
+const LOCK_FILE_NAME: &str = "MOMMY.lock";
 
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
@@ -99,6 +105,36 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         let _ = arg_iter.next();
     }
 
+    // mommy will attempt to parse your input as a integer~
+    // but if you provide nonsense you'll get punished~
+
+    let beg_chance: u8 = BEG_CHANCE
+        .load(&true_role, &rng)?
+        .trim()
+        .parse()
+        .unwrap_or_else(|err: std::num::ParseIntError| match err.kind() {
+            std::num::IntErrorKind::PosOverflow => 100,
+            std::num::IntErrorKind::NegOverflow => 0,
+            _ => 20,
+        });
+
+    // Sometimes mommy will decide to make you beg. So we have to check to make sure that if we
+    // are to pop that argument off. But also note that it can be ok to beg if not required~
+    //
+    // Mommy also makes sure not to break anyone who wants to use a real tool called "cargo
+    // please" if set to zero.
+
+    let begging = if beg_chance != 0 {
+        arg_iter
+            .peek()
+            .map_or(false, |arg| arg == "please")
+            .then(|| arg_iter.next())
+            .flatten()
+            .is_some()
+    } else {
+        true
+    };
+
     // *WHEEZES*
     //
     // *PANTS FOR A MINUTE*
@@ -157,22 +193,64 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
-    // Time for mommy to call cargo~
-    let mut cmd = std::process::Command::new(cargo);
-    cmd.args(args)
-        .env(RECURSION_LIMIT_VAR, new_limit.to_string());
-    let status = cmd.status()?;
-    let code = status.code().unwrap_or(1);
-    if is_quiet_mode_enabled(cmd.get_args()) {
-        return Ok(code);
-    }
+    // mommy probably shouldn't be too smart with file system errors
+    let mut maybe_beg = match check_need_beg(&rng, beg_chance) {
+        Err(err) => {
+            eprintln!(
+                "\x1b[1m{} fought against the file system and lost~\x1b[0m",
+                ROLE.load(&true_role, &rng)?
+            );
+            Err(err)?
+        }
+        Ok(beg) => beg,
+    };
+
+    let (response_kind, code) = if begging || maybe_beg.is_not_needed() {
+        // Can add handling for if they are begging at the first required beg.
+        // Because that means they are begging more than they need to.
+        //
+        // This could be good or bad. Depending on mommy's mood.
+        if let Err(err) = maybe_beg.remove_lock() {
+            eprintln!(
+                "\x1b[1m{} fought against the file system and lost~\x1b[0m",
+                ROLE.load(&true_role, &rng)?
+            );
+            Err(err)?
+        };
+
+        // Time for mommy to call cargo~
+        let mut cmd = std::process::Command::new(cargo);
+        cmd.args(args)
+            .env(RECURSION_LIMIT_VAR, new_limit.to_string());
+        let status = cmd.status()?;
+        let code = status.code().unwrap_or(1);
+        if is_quiet_mode_enabled(cmd.get_args()) {
+            return Ok(code);
+        }
+
+        (
+            if status.success() {
+                ResponseType::Positive
+            } else {
+                ResponseType::Negative
+            },
+            code,
+        )
+    } else {
+        // uh oh, someone isn't begging like they need to~
+
+        match maybe_beg.needs {
+            NeedsBeg::Needed(BegKind::First) => (ResponseType::FirstBeg, 69),
+            NeedsBeg::Needed(BegKind::NotFirst) => (ResponseType::DidNotBeg, 69),
+            NeedsBeg::NotNeeded => unreachable!(
+                "mommy cannot reach this case~ someone did something naughty and needs a spanking~"
+            ),
+        }
+    };
 
     // Time for mommy to tell you how you did~
-    let response = if status.success() {
-        select_response(&true_role, &rng, ResponseType::Positive)
-    } else {
-        select_response(&true_role, &rng, ResponseType::Negative)
-    };
+    let response = select_response(&true_role, &rng, response_kind);
+
     pretty_print(response);
 
     Ok(code)
@@ -199,6 +277,83 @@ fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
     }
 
     false
+}
+
+/// Mommy should be able to tell if this is her first time asking for a pet to beg~
+enum BegKind {
+    First,
+    NotFirst,
+}
+
+enum NeedsBeg {
+    NotNeeded,
+    Needed(BegKind),
+}
+
+/// whether mommy needs her pet to beg, and how to create a lock if they do.
+struct BegCtx {
+    /// Whether or not mommy requires begging
+    needs: NeedsBeg,
+
+    /// Path to the lock file that may or may not exist
+    path: PathBuf,
+}
+
+impl BegCtx {
+    #[must_use]
+    fn is_not_needed(&self) -> bool {
+        matches!(self.needs, NeedsBeg::NotNeeded)
+    }
+
+    /// Remove a lock file
+    fn remove_lock(&mut self) -> Result<(), std::io::Error> {
+        match std::fs::remove_file(&self.path) {
+            Err(err) if err.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            err => err,
+        }
+    }
+}
+
+/// does mommy need a little extra~?
+fn check_need_beg(rng: &Rng, beg_chance: u8) -> Result<BegCtx, std::io::Error> {
+    // TODO(?): Make this configurable where it's placed
+    let lock_file_path = {
+        let mut file = home::cargo_home()?;
+        file.push(LOCK_FILE_NAME);
+        file
+    };
+
+    // Fast path if mommy's pet is always good~
+    if beg_chance == 0 {
+        return Ok(BegCtx {
+            needs: NeedsBeg::NotNeeded,
+            path: lock_file_path,
+        });
+    }
+
+    let beg_pick = rng.u8(..100);
+
+    // Unconditionally create lock file to try and mitigate mitigate funny toctou
+    let maybe_lock = std::fs::OpenOptions::new()
+        .create_new(true)
+        .append(true)
+        .open(&lock_file_path);
+
+    match maybe_lock {
+        Ok(_) => Ok(BegCtx {
+            needs: if beg_pick < beg_chance {
+                NeedsBeg::Needed(BegKind::First)
+            } else {
+                NeedsBeg::NotNeeded
+            },
+            path: lock_file_path,
+        }),
+        Err(err) if err.kind() == std::io::ErrorKind::AlreadyExists => Ok(BegCtx {
+            needs: NeedsBeg::Needed(BegKind::NotFirst),
+            path: lock_file_path,
+        }),
+        Err(err) => Err(err),
+    }
 }
 
 fn select_response(
@@ -228,6 +383,9 @@ fn select_response(
         ResponseType::Positive => group.positive,
         ResponseType::Negative => group.negative,
         ResponseType::Overflow => group.overflow,
+        ResponseType::FirstBeg => group.beg_first,
+        // TODO: Implement this category
+        ResponseType::DidNotBeg => group.beg_first,
     };
     let response = &responses[rng.usize(..responses.len())];
 
@@ -282,6 +440,7 @@ struct Mood<'a> {
     positive: &'a [&'a [Chunk<'a>]],
     negative: &'a [&'a [Chunk<'a>]],
     overflow: &'a [&'a [Chunk<'a>]],
+    beg_first: &'a [&'a [Chunk<'a>]],
 }
 
 enum Chunk<'a> {
