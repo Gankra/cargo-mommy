@@ -43,7 +43,8 @@
                 "{role} has executed too many times and needs to take a nap~"
             ],
             "beg_first": [
-                "you're doing good my {affectionate_term}, but you need to try a bit harder~"
+                "you're a good {affectionate_term}, but you need to try a bit harder~",
+                "{role} thinks you should put some more effort in to asking~"
             ]
         },
         "ominous": {
