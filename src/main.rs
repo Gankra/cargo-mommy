@@ -21,6 +21,9 @@ const RECURSION_LIMIT: u8 = 100;
 /// much of a mess~
 const RECURSION_LIMIT_VAR: &str = "CARGO_MOMMY_RECURSION_LIMIT";
 
+/// The lock file name
+const LOCK_FILE_NAME: &str = "MOMMY.lock";
+
 fn main() {
     // Ideally mommy would use ExitCode but that's pretty new and mommy wants
     // to support more little ones~
@@ -170,7 +173,6 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
-
     let beg_chance = BEG_CHANCE.load(&true_role, &rng)?.parse().unwrap_or(20);
 
     // mommy probably shouldn't be too smart with file system errors
@@ -222,7 +224,9 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         match maybe_beg.needs {
             NeedsBeg::Needed(BegKind::First) => (ResponseType::FirstBeg, 69),
             NeedsBeg::Needed(BegKind::NotFirst) => (ResponseType::DidNotBeg, 69),
-            NeedsBeg::NotNeeded => unreachable!("mommy cannot reach this case~ someone did something naught and needs a spanking~"),
+            NeedsBeg::NotNeeded => unreachable!(
+                "mommy cannot reach this case~ someone did something naughty and needs a spanking~"
+            ),
         }
     };
 
@@ -285,7 +289,10 @@ impl BegCtx {
 
     /// Remove a lock file
     fn remove_lock(&mut self) -> Result<(), std::io::Error> {
-        std::fs::remove_file(&self.path)
+        match std::fs::remove_file(&self.path) {
+            Err(err) if err.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            err => err,
+        }
     }
 }
 
@@ -294,7 +301,7 @@ fn check_need_beg(rng: &Rng, beg_chance: u8) -> Result<BegCtx, std::io::Error> {
     // TODO(?): Make this configurable where it's placed
     let lock_file_path = {
         let mut file = home::cargo_home()?;
-        file.push("MOMMY.lock");
+        file.push(LOCK_FILE_NAME);
         file
     };
 
