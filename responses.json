@@ -44,7 +44,10 @@
             ],
             "beg_first": [
                 "you're a good {affectionate_term}, but you need to try a bit harder~",
-                "{role} thinks you should put some more effort in to asking~"
+                "{role} thinks you should put some more effort in to asking~",
+                "ask nicely~",
+                "say the magic word for {role}~",
+                "mind your p's and q's~"
             ]
         },
         "ominous": {
@@ -62,7 +65,8 @@
                 "THOU HAST DRUNK TOO DEEPLY OF THE FONT"
             ],
             "beg_first": [
-                "put in more effort or a failure will be the least of your worries"
+                "{role}'s {affectionate_term} could be a bit nicer",
+                "ask {role} nicer or {pronoun} will show you fear"
             ]
         },
 
@@ -106,7 +110,11 @@
                 "you've been a bad little {affectionate_term} and worn out {role}~"
             ],
             "beg_first": [
-                "{role} doesn't like your tone. Beg."
+                "{role} doesn't like your tone. Beg for {role}",
+                "{affectionate_term} sounds so cute when you beg for {role}~",
+                "if you begged for it {role} would be really happy and could give a treat~",
+                "begging makes {role} very happy~",
+                "did {role} hear something in your tone? Ask nicely~"
             ]
         },
 
@@ -145,7 +153,10 @@
                 "brats like you don't get to talk to {role}"
             ],
             "beg_first": [
-                "keep edging a little longer {denigrating_term}, {role} likes seeing you like this~"
+                "{role} will keep {pronoun} {denigrating_term} edging until they ask nicely",
+                "{denigrating_term}s like you need to stay in line and watch their tone",
+                "if you beg for it {role} could give you some {part}",
+                "bad {denigrating_term}s don't deserve it unless they beg"
             ]
         }
     },
