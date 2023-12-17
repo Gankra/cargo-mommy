@@ -105,14 +105,34 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         let _ = arg_iter.next();
     }
 
-    // Sometimes mommy will decide to make you beg. So we have to check to make sure that if we
-    // are to pop that argument off. But also note that it is ok to beg even if not required~
+    // mommy will attempt to parse your input as a integer~
+    // but if you provide nonsense you'll get punished~
 
-    let begging = if arg_iter.peek().map_or(false, |arg| arg == "please") {
-        let _ = arg_iter.next();
-        true
+    let beg_chance: u8 = BEG_CHANCE
+        .load(&true_role, &rng)?
+        .trim()
+        .parse()
+        .unwrap_or_else(|err: std::num::ParseIntError| match err.kind() {
+            std::num::IntErrorKind::PosOverflow => 100,
+            std::num::IntErrorKind::NegOverflow => 0,
+            _ => 20,
+        });
+
+    // Sometimes mommy will decide to make you beg. So we have to check to make sure that if we
+    // are to pop that argument off. But also note that it can be ok to beg if not required~
+    //
+    // Mommy also makes sure not to break anyone who wants to use a real tool called "cargo
+    // please" if set to zero.
+
+    let begging = if beg_chance != 0 {
+        arg_iter
+            .peek()
+            .map_or(false, |arg| arg == "please")
+            .then(|| arg_iter.next())
+            .flatten()
+            .is_some()
     } else {
-        false
+        true
     };
 
     // *WHEEZES*
@@ -172,8 +192,6 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
             }
         }
     }
-
-    let beg_chance = BEG_CHANCE.load(&true_role, &rng)?.parse().unwrap_or(20);
 
     // mommy probably shouldn't be too smart with file system errors
     let mut maybe_beg = match check_need_beg(&rng, beg_chance) {
