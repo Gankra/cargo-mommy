@@ -285,8 +285,7 @@ fn select_response(
         ResponseType::Positive => group.positive,
         ResponseType::Negative => group.negative,
         ResponseType::Overflow => group.overflow,
-        // TODO: Add real responses.
-        ResponseType::FirstBeg => group.negative,
+        ResponseType::FirstBeg => group.beg_first,
     };
     let response = &responses[rng.usize(..responses.len())];
 
