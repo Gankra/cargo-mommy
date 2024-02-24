@@ -158,10 +158,12 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     }
 
     // Time for mommy to call cargo~
-    let mut cmd = std::process::Command::new(cargo);
+    let mut cmd = std::process::Command::new(&cargo);
     cmd.args(args)
         .env(RECURSION_LIMIT_VAR, new_limit.to_string());
-    let status = cmd.status()?;
+    let status: std::process::ExitStatus = cmd.status().map_err(|err: std::io::Error| {
+        format!("{true_role} tried looking everywhere, but did not find `{cargo}`: {err}",)
+    })?;
     let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
         return Ok(code);
