@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>cargo-mommy Changelog</title><link>http://127.0.0.1:7979/cargo-mommy/changelog</link><description>Changelog information for cargo-mommy</description><category domain="https://github.com/Gankra/cargo-mommy">cargo-mommy Changelog</category><atom:link href="http://127.0.0.1:7979/cargo-mommy/changelog.rss" rel="self"/><item><title>Version 0.3.1 (2023-11-20)</title><link>http://127.0.0.1:7979/cargo-mommy/changelog/v0.3.1</link><category domain="https://github.com/Gankra/cargo-mommy">cargo-mommy Changelog</category><guid>http://127.0.0.1:7979/cargo-mommy/changelog/v0.3.1</guid><content:encoded><![CDATA[<ul>
+<li><a href="https://faultlore.com/cargo-mommy/book/" rel="noopener noreferrer">mommy now has a book~</a></li>
+<li><a href="https://faultlore.com/cargo-mommy/book/customize/not-just-cargo.html" rel="noopener noreferrer">mommy is easier to run with other things than cargo~</a></li>
+</ul>
+]]></content:encoded></item><item><title>Version 0.3.0 (2023-11-18)</title><link>http://127.0.0.1:7979/cargo-mommy/changelog/v0.3.0</link><category domain="https://github.com/Gankra/cargo-mommy">cargo-mommy Changelog</category><guid>http://127.0.0.1:7979/cargo-mommy/changelog/v0.3.0</guid><content:encoded><![CDATA[<p>mommy has lots of improvements from lots of good little helpers~</p>
+<ul>
+<li>
+<p>mommy is now totally data-driven, new moods and templates can be added with only the responses.json~</p>
+</li>
+<li>
+<p>'cargo mommy i mean daddy' will turn cargo-mommy into cargo-daddy (it's not just daddy that works)~</p>
+</li>
+<li>
+<p>mommy now reflects on her true nature, so if you invoke her as cargo-daddy, she'll default to calling herself "daddy" and read config from <code>CARGO_DADDYS_*</code> (note the extra S at the end!)~</p>
+</li>
+<li>
+<p>mommy now handles colors better when piped to a file~</p>
+</li>
+<li>
+<p>mommy has lots of type fixes and new things to say to you~</p>
+</li>
+<li>
+<p>mommy can now be in an "ominous" mood~</p>
+</li>
+<li>
+<p>mommy has more docs~</p>
+</li>
+<li>
+<p>mommy now exit codes positively when you make a mistake~</p>
+</li>
+<li>
+<p>mommy now notices when she's run too many times recursively~</p>
+</li>
+<li>
+<p>mommy now has proper ci and release engineering~</p>
+</li>
+<li>
+<p><a href="https://github.com/Gankra/cargo-mommy/releases" rel="noopener noreferrer">mommy now has prebuilt binaries and curl|sh installers from cargo-dist~</a></p>
+</li>
+<li>
+<p><a href="https://faultlore.com/cargo-mommy/" rel="noopener noreferrer">mommy now has a website from oranda where you can get the prebuilt binaries~</a></p>
+</li>
+</ul>
+]]></content:encoded></item><item><title>Version 0.3.0-prerelease.2</title><link>http://127.0.0.1:7979/cargo-mommy/changelog/v0.3.0-prerelease.2</link><category domain="https://github.com/Gankra/cargo-mommy">cargo-mommy Changelog</category><guid>http://127.0.0.1:7979/cargo-mommy/changelog/v0.3.0-prerelease.2</guid><content:encoded><![CDATA[<p>mommy has lots of improvements from lots of good little helpers~</p>
+<ul>
+<li>
+<p>mommy is now totally data-driven, new moods and templates can be added with only the responses.json~</p>
+</li>
+<li>
+<p>'cargo mommy i mean daddy' will turn cargo-mommy into cargo-daddy (it's not just daddy that works)~</p>
+</li>
+<li>
+<p>mommy now reflects on her true nature, so if you invoke her as cargo-daddy, she'll default to calling herself "daddy" and read config from <code>CARGO_DADDYS_*</code> (note the extra S at the end!)~</p>
+</li>
+<li>
+<p>mommy now handles colors better when piped to a file~</p>
+</li>
+<li>
+<p>mommy has lots of type fixes and new things to say to you~</p>
+</li>
+<li>
+<p>mommy can now be in an "ominous" mood~</p>
+</li>
+<li>
+<p>mommy has more docs~</p>
+</li>
+<li>
+<p>mommy now exit codes positively when you make a mistake~</p>
+</li>
+<li>
+<p>mommy now notices when she's run too many times recursively~</p>
+</li>
+<li>
+<p>mommy now has proper ci and release engineering~</p>
+</li>
+<li>
+<p><a href="https://github.com/Gankra/cargo-mommy/releases" rel="noopener noreferrer">mommy now has prebuilt binaries and curl|sh installers from cargo-dist~</a></p>
+</li>
+<li>
+<p><a href="https://faultlore.com/cargo-mommy/" rel="noopener noreferrer">mommy now has a website from oranda where you can get the prebuilt binaries~</a></p>
+</li>
+</ul>
+]]></content:encoded></item></channel></rss>

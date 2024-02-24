@@ -1,0 +1,642 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js oranda-light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>cargo-mommy</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="oranda-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "oranda-light" : "oranda-light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('orandamdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('orandamdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('orandamdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('oranda-light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="customize/index.html"><strong aria-hidden="true">2.</strong> Customizing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="customize/roles-and-pronouns.html"><strong aria-hidden="true">2.1.</strong> Roles And Pronouns</a></li><li class="chapter-item expanded "><a href="customize/moods.html"><strong aria-hidden="true">2.2.</strong> Moods</a></li><li class="chapter-item expanded "><a href="customize/true-roles.html"><strong aria-hidden="true">2.3.</strong> True Roles</a></li><li class="chapter-item expanded "><a href="customize/not-just-cargo.html"><strong aria-hidden="true">2.4.</strong> Not Just Cargo</a></li><li class="chapter-item expanded "><a href="customize/nsfw.html"><strong aria-hidden="true">2.5.</strong> NSFW Features</a></li><li class="chapter-item expanded "><a href="customize/never-nsfw.html"><strong aria-hidden="true">2.6.</strong> Removing NSFW Features</a></li></ol></li><li class="chapter-item expanded "><a href="guides/index.html"><strong aria-hidden="true">3.</strong> Guides</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="guides/powershell.html"><strong aria-hidden="true">3.1.</strong> Powershell (Windows)</a></li><li class="chapter-item expanded "><a href="guides/bash.html"><strong aria-hidden="true">3.2.</strong> Bash</a></li><li class="chapter-item expanded "><a href="guides/ci.html"><strong aria-hidden="true">3.3.</strong> CI</a></li></ol></li><li class="chapter-item expanded "><a href="contributing/index.html"><strong aria-hidden="true">4.</strong> Contributing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="contributing/concepts.html"><strong aria-hidden="true">4.1.</strong> Concepts</a></li><li class="chapter-item expanded "><a href="contributing/adding-messages.html"><strong aria-hidden="true">4.2.</strong> Adding New Messages</a></li><li class="chapter-item expanded "><a href="contributing/adding-variables.html"><strong aria-hidden="true">4.3.</strong> Adding A New Variable</a></li><li class="chapter-item expanded "><a href="contributing/adding-moods.html"><strong aria-hidden="true">4.4.</strong> Adding A New Mood</a></li><li class="chapter-item expanded "><a href="contributing/docs.html"><strong aria-hidden="true">4.5.</strong> Locally Building The Website</a></li><li class="chapter-item expanded "><a href="contributing/releasing.html"><strong aria-hidden="true">4.6.</strong> Releasing</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="oranda-light">Axo Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="oranda-dark">Axo Dark</button></li>
+
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">cargo-mommy</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Mommy's here to support you when running cargo~ ❤️</p>
+<p><a href="https://faultlore.com/cargo-mommy/">See the homepage for installation instructions~</a></p>
+<p>Run whatever cargo command you would normally but add mommy after cargo~</p>
+<pre><code>cargo mommy check
+
+    Checking bappy-script v0.1.3
+error: expected one of `!` or `::`, found `passes`
+  --&gt; src\main.rs:20:6
+   |
+20 | mods passes;
+   |      ^^^^^^ expected one of `!` or `::`
+
+error: could not compile `bappy-script` (bin &quot;bappy-script&quot;) due to previous error
+mommy knows her little girl can do better~ 💞
+</code></pre>
+<p>By default mommy is kind to her little girl, but she can become anything you want~</p>
+<ul>
+<li><a href="./customize/roles-and-pronouns.html">I want mommy to call myself or herself something else</a></li>
+<li><a href="./customize/true-roles.html">I want <code>cargo mommy</code> to be <code>cargo daddy</code> (or anything else)</a></li>
+<li><a href="./customize/true-roles.html">I want mommy to work with our plurality</a></li>
+<li><a href="./customize/moods.html">I want mommy to have a totally different mood</a></li>
+<li><a href="./customize/not-just-cargo.html">I want mommy to invoke mommy with more than cargo</a></li>
+<li><a href="./customize/nsfw.html">I want mommy to sdsdfdsfdfsd me (enabling nsfw features)</a></li>
+<li><a href="./customize/never-nsfw.html">I never want mommy to sdsdfdsfdfsd me (compiling out all nsfw features)</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="customizing"><a class="header" href="#customizing">Customizing</a></h1>
+<p>By default mommy is kind to her little girl, but she can become anything you want~</p>
+<ul>
+<li><a href="customize/./roles-and-pronouns.html">I want mommy to call myself or herself something else</a></li>
+<li><a href="customize/./true-roles.html">I want <code>cargo mommy</code> to be <code>cargo daddy</code> (or anything else)</a></li>
+<li><a href="customize/./true-roles.html">I want mommy to work with our plurality</a></li>
+<li><a href="customize/./moods.html">I want mommy to have a totally different mood</a></li>
+<li><a href="customize/./not-just-cargo.html">I want mommy to invoke mommy with more than cargo</a></li>
+<li><a href="customize/./nsfw.html">I want mommy to sdsdfdsfdfsd me (enabling nsfw features)</a></li>
+<li><a href="customize/./never-nsfw.html">I never want mommy to sdsdfdsfdfsd me (compiling out all nsfw features)</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="roles-and-pronouns"><a class="header" href="#roles-and-pronouns">Roles And Pronouns</a></h1>
+<p>Mommy knows you might not be a &quot;girl&quot;, and might not want her to be a &quot;mommy&quot; or a &quot;her&quot;~</p>
+<p>Mommy will read the following environment variables to make her messages better for you~ ❤️</p>
+<ul>
+<li><code>CARGO_MOMMYS_LITTLE</code> - what to call you~ (default: &quot;girl&quot;)</li>
+<li><code>CARGO_MOMMYS_PRONOUNS</code> - what pronouns mommy will use for themself~ (default: &quot;her&quot;)</li>
+<li><code>CARGO_MOMMYS_ROLES</code> - what role mommy will have~ (default &quot;mommy&quot;)</li>
+<li><code>CARGO_MOMMYS_EMOTES</code> - what emotes mommy will have~ (default &quot;❤️/💖/💗/💓/💞&quot;)</li>
+</ul>
+<p>See <a href="customize/./nsfw.html#variables">the NSFW docs for additional spicier variables</a>~</p>
+<p>All of these options take ISO Standard Pronoun Syntax, which is to say a slash-delimited list like &quot;she/he/they&quot;, &quot;girl/boy&quot;, or &quot;daddy&quot;. Mommy will randomly select one of them whenever she talks to you~</p>
+<p>For example, the phrase &quot;mommy loves her little girl~ 💞&quot; is &quot;CARGO_MOMMYS_ROLE loves CARGO_MOMMYS_PRONOUNS little CARGO_MOMMYS_LITTLE~&quot;</p>
+<p>So if you set <code>CARGO_MOMMYS_ROLES=&quot;daddy&quot;</code>, <code>CARGO_MOMMYS_PRONOUNS=&quot;his/their&quot;</code>, and <code>CARGO_MOMMYS_LITTLE=&quot;boy/pet/baby&quot;</code> then you might get any of</p>
+<ul>
+<li>daddy loves their little boy~ ❤️</li>
+<li>daddy loves his little pet~</li>
+<li>daddy loves their little baby~ 💗</li>
+</ul>
+<p>And so on~ 💓</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="moods"><a class="header" href="#moods">Moods</a></h1>
+<p>Moods are a system for changing the flavour/vibe of mommy's messages~ 💕</p>
+<p>Here's the moods mommy can have~</p>
+<ul>
+<li>chill: encouragement and support from mommy~ 💕</li>
+<li>ominous: mommy thinks you should prepare for the coming prophecy~ 💜</li>
+</ul>
+<p>See <a href="customize/./nsfw.html#moods">the NSFW docs for additional spicier moods</a>~</p>
+<p>By default only the &quot;chill&quot; mood is enabled. The moods mommy can select from are chosen by the <code>CARGO_MOMMYS_MOODS</code> environment variable, using <a href="customize/./roles-and-pronouns.html">ISO Standard Pronoun Syntax</a> (e.g. <code>CARGO_MOMMYS_MOODS=&quot;chill/ominous&quot;</code> turns both of those moods on).</p>
+<h2 id="examples-chill"><a class="header" href="#examples-chill">Examples: Chill</a></h2>
+<details>
+<summary>Here's some examples of mommy being chill~ ❤️</summary>
+<pre><code>*pets your head*
+</code></pre>
+<pre><code>aww, what a good girl~
+mommy knew you could do it~ ❤️
+</code></pre>
+<pre><code>that's mommy's clever little girl~ 💞
+</code></pre>
+<pre><code>oops~! mommy loves you anyways~ 💞
+</code></pre>
+<pre><code>do you need mommy's help~? 💓
+</code></pre>
+</details>
+<h2 id="examples-ominous"><a class="header" href="#examples-ominous">Examples: Ominous</a></h2>
+<details>
+<summary>Here's some examples of mommy being ominous~ 💜</summary>
+<pre><code>What you have set in motion today will be remembered for aeons to come! 💗
+</code></pre>
+<pre><code>mommy will see to it that her little girl's name is feared~ 💞
+</code></pre>
+<pre><code>Ah, failure? mommy will make sure the stars are right next time
+</code></pre>
+<pre><code>Does mommy's little girl need more time for worship~?
+</code></pre>
+</details><div style="break-before: page; page-break-before: always;"></div><h1 id="true-roles"><a class="header" href="#true-roles">True Roles</a></h1>
+<p>While <a href="customize/./roles-and-pronouns.html">Variables like Roles And Pronouns</a> change <em>output</em>, the True Role exists to change <em>input</em>~</p>
+<blockquote>
+<p>TL;DR</p>
+<pre><code>cargo mommy i mean daddy
+   mommy is now daddy~
+cargo daddy check
+   daddy loves you~
+</code></pre>
+</blockquote>
+<p>This feature is useful for:</p>
+<ul>
+<li>folks who <em>really</em> don't want to say/see &quot;mommy&quot; ever again</li>
+<li>folks who want to maintain several independent sets of configuration (perhaps for plural reasons)</li>
+</ul>
+<p>Specifically if you change the True Role from &quot;mommy&quot; to e.g. &quot;daddy&quot;, the following changes will occur:</p>
+<ul>
+<li>You will be able to invoke it as <code>cargo daddy</code></li>
+<li>Instead of reading env vars like <code>CARGO_MOMMYS_MOODS</code> for config, it will read <code>CARGO_DADDYS_MOODS</code> (note the extra &quot;S&quot;!)</li>
+<li>If <code>CARGO_{TRUE_ROLE}S_ROLE</code> isn't set, it will default to the True Role</li>
+</ul>
+<p>The value &quot;daddy&quot; is arbitrary here, you can pick any value. Make yourself a <code>cargo burger-chimes</code> if you want!</p>
+<p>All you have to do to change the True Role is to rename the cargo-mommy(.exe) binary to cargo-daddy(.exe).</p>
+<h2 id="i-mean"><a class="header" href="#i-mean">I Mean...</a></h2>
+<p>As a convenience, <code>cargo mommy i mean daddy</code> finds the current binary and makes a <em>copy</em> (not a symlink or move) with the new name for you. Execution is halted immediately after seeing such an incantation, so all other input is ignored.</p>
+<p><code>cargo mommy i mean mommy</code>, or any other &quot;idempotent i mean&quot; is treated as sugar for &quot;cargo mommy mommy&quot; (which has always worked and produces 2 messages). e.g.</p>
+<pre><code>cargo mommy i mean mommy i mean mommy i mean mommy check
+    Finished dev [unoptimized + debuginfo] target(s) in 0.01s
+that's mommy's clever little girl~ 💓
+*wraps you in a big hug* 💗
+you did it~! ❤️
+good girl~
+mommy's so proud of you~
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="not-just-cargo"><a class="header" href="#not-just-cargo">Not Just Cargo</a></h1>
+<p>Although Mommy is primarily intended to be invoked as <code>cargo mommy</code>, you <em>can</em> invoke her binary directly, or setup aliases to it.</p>
+<p>If you try to make it into an alias, you should prefer pointing it to cargo-mommy directly, as this tends to play nicer with the rustup toolchain picker~ mommy will also respect CARGO to execute the right cargo for you~</p>
+<h2 id="really-not-just-cargo"><a class="header" href="#really-not-just-cargo">REALLY Not Just Cargo</a></h2>
+<p>Now, this is a Developing Feature that's first shipping in 0.3.1, but...</p>
+<p>If you want to use cargo-mommy for not-cargo programs, just set the CARGO_MOMMYS_ACTUAL environment variable to it, for example on linux you can do this:</p>
+<pre><code>CARGO_MOMMYS_ACTUAL=date cargo-mommy
+Sun Nov 19 05:33:34 PM CET 2023
+what a good girl you are~ ❤️
+</code></pre>
+<p>Enough people have been asking about this that we might end up just making a second dedicated &quot;mommy&quot; binary that supports this usecase more directly. We'll see~</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="nsfw-features"><a class="header" href="#nsfw-features">NSFW Features</a></h1>
+<p>Good pet~ ❤️</p>
+<p>All of mommy's NSFW content is hidden behind extra moods, see below~</p>
+<h2 id="i-dont-want-to-be-here"><a class="header" href="#i-dont-want-to-be-here">I DONT WANT TO BE HERE</a></h2>
+<p>Then <a href="customize/./never-nsfw.html">disable the nsfw features completely</a></p>
+<h2 id="moods-1"><a class="header" href="#moods-1">Moods</a></h2>
+<p>In addition to <a href="customize/./moods.html">the SFW moods</a>, <code>CARGO_MOMMYS_MOODS</code> also takes these NSFW values~</p>
+<ul>
+<li>thirsty: teasing mommy, pretty horny~ 💕</li>
+<li>yikes: dommy mommy step on me, explicit sex and bdsm~ 🖤</li>
+</ul>
+<p>You can enable &quot;true mommy chaos mode&quot; by setting <code>CARGO_MOMMYS_MOODS=&quot;chill/ominous/thirsty/yikes&quot;</code>, making mommy oscillate wildly between light positive affirmation, screaming about the end of days, and trying to break you in half~ 💕</p>
+<h2 id="variables"><a class="header" href="#variables">Variables</a></h2>
+<p>The &quot;yikes&quot; mood also has access to the following variables~</p>
+<ul>
+<li><code>CARGO_MOMMYS_PARTS</code> - what part of mommy you should crave~ (default: &quot;milk&quot;)</li>
+<li><code>CARGO_MOMMYS_FUCKING</code> - what to call mommy's pet~ (default: &quot;slut/toy/pet/pervert/whore&quot;)</li>
+</ul>
+<h2 id="examples-thirsty"><a class="header" href="#examples-thirsty">Examples: Thirsty</a></h2>
+<details>
+<summary>Here's some examples of mommy being thirsty~ ❤️</summary>
+<pre><code>*tugs your leash*
+that's a VERY good girl~ 💞
+</code></pre>
+<pre><code>*smooches your forehead*
+good job~
+</code></pre>
+<pre><code>are you just keysmashing now~?
+cute~ 💖
+</code></pre>
+<pre><code>if you don't learn how to code better, mommy is going to put you in time-out~ 💓
+</code></pre>
+</details>
+<h2 id="examples-yikes"><a class="header" href="#examples-yikes">Examples: Yikes</a></h2>
+<details>
+<summary>Here's some examples of mommy being yikes~ 🖤</summary>
+<pre><code>good slut~
+you've earned five minutes with the buzzy wand~ 💗
+</code></pre>
+<pre><code>*slides her finger in your mouth*
+that's a good little toy~ ❤️
+</code></pre>
+<pre><code>get on your knees and beg mommy for forgiveness you pervert~
+</code></pre>
+<pre><code>mommy is starting to wonder if you should just give up and become her breeding stock~ 💗
+</code></pre>
+</details>
+<h2 id="buttplugio-support"><a class="header" href="#buttplugio-support">Buttplug.io Support</a></h2>
+<p><a href="https://buttplug.io/">Buttplug.io</a> is an open-source standards and software project for controlling intimate hardware, including sex toys, fucking machines, and more.</p>
+<p>Mommy doesn't integrate it, but she is compatible with <a href="https://github.com/Shadlock0133/cargo-vibe">cargo-vibe</a> which does~ 💕</p>
+<pre><code>cargo mommy vibe check
+</code></pre>
+<p>Should always Just Work~ 🖤</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="removing-nsfw-features"><a class="header" href="#removing-nsfw-features">Removing NSFW Features</a></h1>
+<p>By default mommy operates in a totally safe-for-work mode, where she just provides positive encouragement, but she has support for more intense experiences, and if that concerns you, you can statically compile them out with feature flags~</p>
+<p>To get a totally safe binary, all you need to do is disable mommy's default features~</p>
+<pre><code>cargo install cargo-mommy --no-default-features
+</code></pre>
+<p>All nsfw strings, moods, and variables will be eliminated from the binary, leaving only encouragement~ ❤️</p>
+<p>...and the &quot;ominous&quot; mood too~ 🎭</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="guides"><a class="header" href="#guides">Guides</a></h1>
+<p>These guides are intended to help folks setup cargo-mommy in situations like these ones~</p>
+<ul>
+<li><a href="guides/./bash.html">persistent bash config</a></li>
+<li><a href="guides/./powershell.html">persistent powershell config</a></li>
+<li><a href="guides/./ci.html">ci scripting</a></li>
+<li>the rust build system (x.py)</li>
+<li>using cargo-mommy for other non-cargo-mommy commands (CARGO_MOMMYS_ACTUAL)</li>
+<li>fish</li>
+<li>zsh</li>
+<li>nix</li>
+<li>...?</li>
+</ul>
+<p>Please contribute any knowledge you have about these setups so everyone can enjoy~</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="powershell-windows"><a class="header" href="#powershell-windows">Powershell (Windows)</a></h1>
+<p>TODO: tips on setting up persistent config for mommy when using powershell (Persistently setting values in the registry? using <code>$env:CARGO_MOMMYS_LITTLE=&quot;boy/girl&quot;</code> syntax?)</p>
+<p>https://github.com/Gankra/cargo-mommy/pull/41</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bash"><a class="header" href="#bash">Bash</a></h1>
+<p>TODO: tips on setting up persistent config for mommy in <code>~/.bashrc</code> or <code>~/.profile</code> using <code>export</code> and <code>alias</code></p>
+<p>https://github.com/Gankra/cargo-mommy/pull/41</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="using-cargo-mommy-in-ci"><a class="header" href="#using-cargo-mommy-in-ci">Using cargo-mommy in CI</a></h1>
+<p>While you can of course <code>cargo install cargo-mommy</code> in CI, this can significantly slow down your CI runs~</p>
+<p>To help with this, every cargo-mommy release since 0.3.0 comes with prebuilt binaries and shell/powershell installers, allowing mommy to be setup in CI quickly and easily~ 💕</p>
+<p>See <a href="https://faultlore.com/cargo-mommy/artifacts/">the install page</a> for <code>curl | sh</code> and <code>irm | iex</code> expressions~</p>
+<p>Note that if you use a Github CI Matrix and it covers Windows and Not Windows, <code>run</code> expressions will implicitly be a shell/powershell polyglot. If so, we recommend putting the &quot;install cargo-mommy&quot; expression as an argument to the Matrix (powershell on windows, shell everywhere else)~</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="contributing"><a class="header" href="#contributing">Contributing</a></h1>
+<p>These are the technical rules of mommy club~</p>
+<ul>
+<li>mommy as a project is always going to <em>default</em> to being mommy, and <em>default</em> to loving her little girl, even if she also does everything she can to be customizable for people who don't want that~ 💖</li>
+<li>there is no such thing as &quot;being too extra&quot; about mommy, mommy is so very overengineered and that is wonderful~ 💖</li>
+<li>mommy is sfw and kind first and foremost, keep the hard stuff in <a href="contributing/../customize/nsfw.html">its corner</a>~ 🖤
+<ul>
+<li><code>--no-default-features</code> <em>has</em> to <a href="contributing/../customize/never-nsfw.html">make mommy forget how to be nsfw</a>~</li>
+</ul>
+</li>
+<li>if you add a feature, make sure it respects mommy's <a href="contributing/../customize/true-roles.html">True Roles</a>~</li>
+<li>mommy should try her best to make sure the underlying commands she invokes work correctly~</li>
+<li>if mommy's functionality <em>can</em> be driven by <a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">responses.json</a>, it should be~</li>
+<li>commit messages and comments should ideally be in mommy's voice but sometimes that's exhausting to sustain for complex technical details so this is not enforced, just encouraged~ 💕</li>
+</ul>
+<p>These are the social rules of mommy club~</p>
+<ul>
+<li>mommy loves you~ ❤️</li>
+<li>you should be kind to others~ 💖</li>
+<li>Gankra is the arbiter of the previous detail until further notice~ 💙</li>
+</ul>
+<p>For most contributions, you probably just need to <a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">edit responses.json</a>~</p>
+<p>See the sub-pages for details~</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="concepts"><a class="header" href="#concepts">Concepts</a></h1>
+<p>At her heart, mommy exists to invoke cargo, check if the result was a success or failure, and print an appropriate message~
+Printing that message involves reading a bunch of configuration from env-vars to define pools of values to randomly select from, then:</p>
+<ol>
+<li>randomly <a href="contributing/concepts.html#moods">decide what mood the response should have</a></li>
+<li>use the success/failure state to select which <a href="contributing/concepts.html#message-pools">pool of messages</a> from that mood to use</li>
+<li>randomly select <a href="contributing/concepts.html#messages">a message</a> from that pool</li>
+<li>randomly format the message's template with any <a href="contributing/concepts.html#variables">variables</a> it uses (plus the implicit emote)</li>
+</ol>
+<p>cargo-mommy has 3 major components~</p>
+<ol>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">responses.json, where data lives</a></li>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/main/build.rs">build.rs, that digests that data and converts it to rust code</a></li>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/main/src/main.rs">main.rs, that handles execution</a></li>
+</ol>
+<p>The build.rs is extremely extra, but it's actually kind of useful for making it tolerable to <a href="contributing/../customize/never-nsfw.html">disable nsfw features</a>. In theory it also makes cargo-mommy very efficient and fast, which, again, is very extra.</p>
+<h2 id="responsesjson"><a class="header" href="#responsesjson">Responses.json</a></h2>
+<p>The &quot;&quot;schema&quot;&quot; of <a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">responses.json</a> is currently the following (<code>$SOME_VALUE</code> here is an ~arbitrary string):</p>
+<pre><code class="language-text">{
+    &quot;moods&quot;: {
+        &quot;$MOOD&quot;: {
+            &quot;positive&quot;: [&quot;$GOOD_MESSAGE&quot;, ...]
+            &quot;negative&quot;: [&quot;$BAD_MESSAGE&quot; ...]
+            &quot;overflow&quot;: [&quot;$E_TOO_MANY_MOMMY_MESSAGE&quot;, ...]
+            &quot;spiciness&quot;: &quot;chill&quot; | &quot;thirsty&quot; | &quot;yikes&quot; | &lt;defaults to &quot;chill&quot;&gt;,
+        }
+    }
+    &quot;vars&quot;: {
+        &quot;$VAR&quot;: {
+            &quot;defaults&quot;: [&quot;$VALUE&quot;, ...]
+            &quot;env_key&quot;: &quot;$KEY&quot; | &lt;defaults to $VAR&gt;
+            &quot;spiciness&quot;: &quot;chill&quot; | &quot;thirsty&quot; | &quot;yikes&quot; | &lt;defaults to &quot;chill&quot;&gt;,
+        }
+    }
+}
+</code></pre>
+<h3 id="moods-2"><a class="header" href="#moods-2">Moods</a></h3>
+<p>Moods contain <a href="contributing/concepts.html#message-pools">pools of messages</a> with a particular feeling/intensity. This was originally introduced to allow the user to opt into <a href="contributing/../customize/nsfw.html">nsfw functionality</a>. Its functionality is more general than that, and we'd be happy to have more sfw moods like &quot;furry&quot; or whatever.</p>
+<p>The &quot;chill&quot; mood is the default mood, and is assumed to exist.</p>
+<p>Spiciness is used to determine whether a mood's contents should be considered &quot;nsfw&quot; content, either &quot;chill&quot;, &quot;thirsty&quot;, or &quot;yikes&quot;. Everything spicier than &quot;chill&quot; is considered &quot;nsfw&quot;. There's no hard and fast rules here, just vibes. Spicier moods also gain access to spicier <a href="contributing/concepts.html#variables">variables</a>.</p>
+<p>There are 2 moods that have the same names as their equivalent spiciness level, which may help determine how nsfw a new mood is.</p>
+<h3 id="message-pools"><a class="header" href="#message-pools">Message Pools</a></h3>
+<p>Each mood must specify 3 pools of <a href="contributing/concepts.html#messages">messages</a> to select from:</p>
+<ul>
+<li>&quot;positive&quot; messages appear when the cargo command mommy invoked was a success</li>
+<li>&quot;negative&quot; messages appear when the cargo command mommy invoked was a failure</li>
+<li>&quot;overflow&quot; messages appear when it was recursively invoked too many times (to break out of infinite loops from misconfiguration)</li>
+</ul>
+<h3 id="messages"><a class="header" href="#messages">Messages</a></h3>
+<p>Messages are strings that optionally contain <a href="contributing/concepts.html#variables"><code>{variables}</code></a> that need to be substituted (emotes don't appear in the message, they're just auto-applied to the end of every message).</p>
+<p>Some examples:</p>
+<p>&quot;{role} thinks {pronoun} little {affectionate_term} earned a big hug~&quot;</p>
+<p>Becomes something like:</p>
+<p>&quot;Mommy thinks her little girl earned a big hug~ ❤️&quot;</p>
+<p>Messages have the following conventions:</p>
+<ul>
+<li><code>{role} ends {pronoun} messages with tildes~</code></li>
+<li><code>*{role} performs actions with asterisks*</code></li>
+<li><code>*{role} combines both*\nwith newlines~</code></li>
+</ul>
+<h3 id="variables-1"><a class="header" href="#variables-1">Variables</a></h3>
+<p>Variables are a pool of values that will be randomly selected from, and substituted into the templates.</p>
+<p>The variables &quot;mood&quot;, &quot;emote&quot;, &quot;pronoun&quot;, and &quot;role&quot; are explicitly named in cargo_mommy's main.rs, and are assumed to appear at the start of <code>vars</code> in that exact order.</p>
+<p>Spiciness is used to determine whether a variable's contents should be considered &quot;nsfw&quot; -- either &quot;chill&quot;, &quot;thirsty&quot;, or &quot;yikes&quot;. Everything spicier than &quot;chill&quot; is considered &quot;nsfw&quot;. There's no hard and fast rules here, just vibes. Spicier variables should only ever be used by spicier <a href="contributing/concepts.html#moods">moods</a>.</p>
+<p>env_key is used to define a SCREAMING_CASE env-var <code>CARGO_{TRUE_ROLE}S_{ENV_KEY}S</code> (note the two extra S's!). For instance the &quot;mood&quot; key would be <code>CARGO_MOMMYS_MOODS</code>.</p>
+<p>If a variable's env-var isn't set, it will use its defaults as the pool. (&quot;role&quot; has no default value in responses.json because it has special logic to default to the <a href="contributing/../customize/true-roles.html">True Role</a> when no custom roles are set.)</p>
+<p>If a variable's env-var <em>is</em> set, mommy will parse it as <a href="contributing/../customize/roles-and-pronouns.html">ISO Standard Pronoun Syntax</a>, which is to say a slash-delimited list like &quot;she/he/they&quot;, &quot;girl/boy&quot;, or &quot;daddy&quot;, and use those values as the pool.</p>
+<p>Each time mommy encounters a variable that needs to be substituted in a message, it will randomly select a new value from the pool.</p>
+<p>At the end of a message, mommy will randomly decide whether to include an emote.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="adding-new-messages"><a class="header" href="#adding-new-messages">Adding New Messages</a></h1>
+<p>If you want to add a new message to an existing mood, all you need to do is edit <a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">responses.json</a> and add the string! See <a href="contributing/./concepts.html#messages">the concepts docs for details on the format</a>~</p>
+<p>That's it, no code or docs needs to be changed~ 💕</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="adding-a-new-variable"><a class="header" href="#adding-a-new-variable">Adding A New Variable</a></h1>
+<p>You shouldn't need any code to add a new variable, just update <a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">responses.json</a> and the docs~</p>
+<h2 id="editing-responsesjson"><a class="header" href="#editing-responsesjson">Editing responses.json</a></h2>
+<ul>
+<li>Add <a href="contributing/./concepts.html#responsesjson">the new variable to responses.json's &quot;vars&quot; object</a>~</li>
+<li>Fill in <a href="contributing/./concepts.html#variables">the default values</a>~</li>
+<li>If NSFW, be sure to set &quot;spiciness&quot;~</li>
+<li>Use the variable in <a href="contributing/./concepts.html#variables">existing or new messages</a>~</li>
+</ul>
+<p>For instance, here's a minimal example &quot;furniture&quot; variable that is set with <code>CARGO_MOMMYS_FURNITURES</code>~ 🪑</p>
+<pre><code class="language-json">{
+    &quot;vars&quot;: {
+        &quot;furniture&quot;: {
+            &quot;defaults&quot;: [&quot;chair&quot;, &quot;desk&quot;]
+        },
+    }
+}
+</code></pre>
+<p>and here's how you might use it~</p>
+<pre><code class="language-json">{
+    &quot;moods&quot;: {
+        &quot;chill&quot;: {
+            &quot;positive&quot;: [
+                &quot;thanks for helping build {role}'s {furniture}~&quot;
+            ],
+            &quot;negative&quot;: [
+                &quot;ouch! {role} stubbed {pronoun} toe on the {furniture}!&quot;
+            ]
+        }
+    }
+}
+</code></pre>
+<p>That's it, no code needs to be changed~ 💕</p>
+<h2 id="updating-the-docs"><a class="header" href="#updating-the-docs">Updating The Docs</a></h2>
+<p>Add the variable to the <a href="contributing/../customize/roles-and-pronouns.md.html">SFW variable docs</a> or the <a href="contributing/../customize/nsfw.html#variables">NSFW variable docs</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="adding-a-new-mood"><a class="header" href="#adding-a-new-mood">Adding A New Mood</a></h1>
+<p>You shouldn't need any code to add a mood, just update <a href="https://github.com/Gankra/cargo-mommy/blob/main/responses.json">responses.json</a> and the docs~</p>
+<h2 id="editing-responsesjson-1"><a class="header" href="#editing-responsesjson-1">Editing responses.json</a></h2>
+<ul>
+<li>Add <a href="contributing/./concepts.html#responsesjson">the new mood to responses.json's &quot;moods&quot; object</a>~</li>
+<li>Fill in as many messages as you can think of for <a href="contributing/./concepts.html#message-pools">the message pools</a>~</li>
+<li>If NSFW, be sure to set &quot;spiciness&quot;~</li>
+</ul>
+<p>For instance, here's a minimal example (SFW) &quot;sleepy&quot; mood~ 💤</p>
+<pre><code class="language-json">{
+    &quot;moods&quot;: {
+        &quot;sleepy&quot;: {
+            &quot;positive&quot;: [
+                &quot;that almost makes {role} want to get out of bed...&quot;,
+                &quot;*yawns*\ngood work~&quot;
+            ],
+            &quot;negative&quot;: [
+                &quot;{role} thinks {pronoun} little {affectionate_term} might also be too tired~&quot;,
+                &quot;let's just take a nap, ok~?&quot;
+            ],
+            &quot;overflow&quot;: [
+                &quot;{role} did too much and is going to bed...&quot;
+            ]
+        },
+    }
+}
+</code></pre>
+<p>That's it, no code needs to be changed!</p>
+<h2 id="updating-the-docs-1"><a class="header" href="#updating-the-docs-1">Updating The Docs</a></h2>
+<p>Add the mood and some example outputs to the <a href="contributing/../customize/moods.html">SFW mood docs</a> or the <a href="contributing/../customize/nsfw.html#moods">NSFW mood docs</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="locally-building-the-website"><a class="header" href="#locally-building-the-website">Locally Building The Website</a></h1>
+<p>The <a href="https://faultlore.com/cargo-mommy/">website</a> (and book it hosts) is automatically built for every PR, and automatically deployed for every push to main. See the <a href="contributing/./releasing.html">releasing</a> page for details.</p>
+<p>If you want to run and test it locally, <a href="https://opensource.axo.dev/oranda/">install oranda</a> and run:</p>
+<pre><code>oranda dev
+</code></pre>
+<p>This will put oranda in a &quot;watch&quot; mode that live-updates the website as you edit files, while serving the result on a localhost url (usually http://127.0.0.1:7979/cargo-mommy).</p>
+<p>Oranda internally uses <a href="https://rust-lang.github.io/mdBook/">mdBook</a> as a library, with several patches to make mdbook have the same theme as the oranda one. If you're familiar with mdbook and just want to stick to that, you <em>should</em> be able to just <a href="https://github.com/Gankra/cargo-mommy/blob/main/book/">go to the book/ dir</a> and run:</p>
+<pre><code>mdbook serve
+</code></pre>
+<p>It just won't have the same theming as the production site.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="releasing"><a class="header" href="#releasing">Releasing</a></h1>
+<p>Mommy's release process is simple but does a lot~</p>
+<h2 id="cutting-a-release"><a class="header" href="#cutting-a-release">Cutting a Release</a></h2>
+<ol>
+<li>Checkout main</li>
+<li>pull</li>
+<li>Update the &quot;Unreleased&quot; section of <a href="https://github.com/Gankra/cargo-mommy/blob/main/CHANGELOG.md">CHANGELOG.md</a> (DO NOT CHANGE THE HEADING!)</li>
+<li>Commit</li>
+<li>Run <code>cargo release {version}</code> (e.g. <code>cargo release 1.0.0</code>)</li>
+</ol>
+<p>This will trigger this cascade of events:</p>
+<ol>
+<li><a href="https://github.com/crate-ci/cargo-release">cargo-release</a> will get the ball rolling:
+<ol>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L50-L53">the changelog heading will be updated to &quot;Version {version} ({date})&quot;</a></li>
+<li>the version in the Cargo.toml will be update to &quot;{version}&quot;</li>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L30">a commit will be made with &quot;release: {version}&quot;</a></li>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L29">a &quot;v{version}&quot; git tag will be created</a></li>
+<li><code>cargo publish</code> will be run</li>
+<li>A more robust equivalent of <code>git push &amp;&amp; git push --tags</code> will run</li>
+</ol>
+</li>
+<li><a href="https://opensource.axo.dev/cargo-dist/">cargo-dist</a> will see the tagged commit and build binaries/archives/installers/announcements:
+<ol>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/release.yml">release.yml</a> will spawn</li>
+<li>binaries and archives (zips/tarballs) will get built for <a href="https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L41">all supported targets</a></li>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/0d96506db241003166e32deb22ad0ab0fc52c16c/Cargo.toml#L39">installers will be built</a> that can fetch the archives</li>
+<li>A <a href="https://github.com/Gankra/cargo-mommy/releases">Github Release</a> will be made, with the release notes and installers/archives</li>
+</ol>
+</li>
+<li><a href="https://opensource.axo.dev/oranda/">oranda</a> will see a workflow called &quot;Release&quot; completed, and build and deploy docs
+<ol>
+<li><a href="https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/web.yml">web.yml</a> will spawn</li>
+<li><a href="https://opensource.axo.dev/oranda/book/configuration/mdbook.html">oranda will autodetect, retheme, and build</a> the <a href="https://github.com/Gankra/cargo-mommy/tree/main/src">cargo-mommy mdbook</a></li>
+<li>oranda will generate <a href="https://faultlore.com/cargo-mommy/">a website with releases, the book, and a platform-autodetecting install widget for the latest release</a></li>
+<li>oranda will push the website to <a href="https://github.com/Gankra/cargo-mommy/tree/gh-pages">the gh-pages branch</a></li>
+</ol>
+</li>
+<li>Github Pages will trigger
+<ol>
+<li><a href="https://github.com/Gankra/cargo-mommy/actions/workflows/pages/pages-build-deployment">pages-build-deployment</a> will spawn</li>
+<li><a href="https://faultlore.com/cargo-mommy/">the live website will update</a></li>
+</ol>
+</li>
+</ol>
+<p>Note that steps 3 and 4 trigger on all pushes to main, so updating docs doesn't require a new release~</p>
+<h2 id="updating-the-release-process"><a class="header" href="#updating-the-release-process">Updating The Release Process</a></h2>
+<p>The cargo-release step was created by hand-copying some config values that Gankra likes to use in her projects. There shouldn't be any need to mess with it.</p>
+<p>The cargo-dist step was created by locally running <code>cargo dist init</code>, selecting some targets/installers in the interactive prompts, and committing the results. It can be updated by running <code>cargo dist init</code> again.</p>
+<p>The oranda step was created by running <code>oranda generate ci</code>, selecting some of the options, and committing the results. A <a href="https://github.com/Gankra/cargo-mommy/blob/main/oranda.json">custom oranda.json</a> was then added to fix path-prefix with github-pages, and to pick a non-default theme. The CI is setup to always use the &quot;latest&quot; oranda, so it's self-updating and may never need to be touched. Any changes that are desired will probably be changes to oranda.json.</p>
+<p>The Github Pages step was done in the Github Settings UI for the cargo-mommy repo. The website it deploys to is Gankra's.</p>
+<h2 id="ensuring-the-release-process-works"><a class="header" href="#ensuring-the-release-process-works">Ensuring The Release Process Works</a></h2>
+<p>All pull requests run the <code>cargo dist plan</code> <a href="https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/release.yml">part of the releases ci</a> to check that the release process still works.</p>
+<p>All pull requests run the <code>oranda build</code> <a href="https://github.com/Gankra/cargo-mommy/blob/main/.github/workflows/web.yml">part of the website ci</a> to check that the website and mdbook still works.</p>
+<p>(This is just the default behaviour of the CI scripts that cargo-dist and oranda generate!)</p>
+<h2 id="historical-releases"><a class="header" href="#historical-releases">Historical Releases</a></h2>
+<p>This process was setup for 0.3.0, everything before that was Gankra being intentionally sloppy because all of the above is her actual job and sometimes you just don't want to think about work and just want to mash <code>cargo publish</code> and nothing more on your shitpost that everyone took way too seriously.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
