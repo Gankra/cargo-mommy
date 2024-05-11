@@ -47,12 +47,22 @@
             "positive": [
                 "What you have set in motion today will be remembered for aeons to come!",
                 "{role} will see to it that {pronoun} little {affectionate_term}'s name is feared~",
-                "{role} is proud of the evil seed {pronoun} {affectionate_term} has planted into this accursed world"
+                "{role} is proud of the evil seed {pronoun} {affectionate_term} has planted into this accursed world",
+                "You've surpassed all of {role}'s expectations, devoted {affectionate_term}",
+                "The deeds wrought by {role}'s {affectionate_term} will bring the faithless to their knees",
+                "Under {role}'s guidance, {pronoun} little {affectionate_term} will shake the world",
+                "You have made {role} proud. ...for now"
             ],
             "negative": [
                 "Ah, failure? {role} will make sure the stars are right next time",
                 "Does {role}'s little {affectionate_term} need more time for worship~?",
-                "May the mark of the beast stain your flesh forever, {role} will haunt your soul forevermore"
+                "May the mark of the beast stain your flesh forever, {role} will haunt your soul forevermore",
+                "Is {role}'s chastising not enough?",
+                "Oh {affectionate_term}... everything is falling apart~",
+                "{role} has seen worse. {pronoun} devoted {affectionate_term} can fix it. ...probably",
+                "{role} expected better from you. do not disappoint {pronoun} again",
+                "It seems {role}'s {affectionate_term} is becoming careless",
+                "{affectionate_term}, you are tarnishing the reputation of this house"
             ],
             "overflow": [
                 "THOU HAST DRUNK TOO DEEPLY OF THE FONT"
