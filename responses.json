@@ -121,11 +121,12 @@
                 "that's a good {denigrating_term}~",
                 "yes~\nyes~~\nyes~~~",
                 "{role}'s going to keep {pronoun} good little {denigrating_term}~",
-                "Open wide {denigrating_term}. you've earned {role}'s {part}~",
-                "Do you want {role}'s {part}? Keep this up and you'll earn it~",
-                "Oooh~ what a good {denigrating_term} you are.~",
+                "open wide {denigrating_term}.\nyou've earned {role}'s {part}~",
+                "do you want {role}'s {part}?\nkeep this up and you'll earn it~",
+                "oooh~ what a good {denigrating_term} you are~"
                 "that's right, {denigrating_term}~\njust like that~~",
                 "mmhmmm {role} thinks {pronoun} knows how to reward you for this...\nopen wide {denigrating_term}~"
+
             ],
             "negative": [
                 "you filthy {denigrating_term}~\nyou made a mess, now clean it up~\nwith your tongue~",
@@ -138,10 +139,10 @@
                 "never forget you belong to {role}~",
                 "does {role} need to put you in the {denigrating_term} wiggler~?",
                 "{role} is starting to wonder if you should just give up and become {pronoun} breeding stock~",
-                "On your knees {denigrating_term}~",
-                "Oh dear. {role} is not pleased",
-                "One spank per error sounds appropriate, don't you think {denigrating_term}?",
-                "No more {part} for you {denigrating_term}"
+                "on your knees {denigrating_term}~",
+                "oh dear. {role} is not pleased",
+                "one spank per error sounds appropriate, don't you think {denigrating_term}?",
+                "no more {part} for you {denigrating_term}"
             ],
             "overflow": [
                 "brats like you don't get to talk to {role}"

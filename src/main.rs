@@ -118,7 +118,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         // "mommy" let "cargo mommy i mean mommy i mean mommy" work right~
         let new_role = args.get(2);
         let mean = args.get(1) == Some(&"mean".to_owned());
-        let i = args.get(0) == Some(&"i".to_owned());
+        let i = args.first() == Some(&"i".to_owned());
         if i && mean {
             if let Some(new_role) = new_role.cloned() {
                 // Ok at this point we're confident we got "i mean <new_role>"
@@ -158,10 +158,12 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     }
 
     // Time for mommy to call cargo~
-    let mut cmd = std::process::Command::new(cargo);
+    let mut cmd = std::process::Command::new(&cargo);
     cmd.args(args)
         .env(RECURSION_LIMIT_VAR, new_limit.to_string());
-    let status = cmd.status()?;
+    let status: std::process::ExitStatus = cmd.status().map_err(|err: std::io::Error| {
+        format!("{true_role} tried looking everywhere, but did not find `{cargo}`: {err}",)
+    })?;
     let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
         return Ok(code);
