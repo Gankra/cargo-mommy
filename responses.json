@@ -19,7 +19,10 @@
                 "that's {role}'s clever little {affectionate_term}~",
                 "you're doing so well~!",
                 "you're making {role} so happy~",
-                "{role} loves {pronoun} cute little {affectionate_term}~"
+                "{role} loves {pronoun} cute little {affectionate_term}~",
+                "{role}'s so proud of {pronoun} little {affectionate_term}~",
+                "*kisses your forehead*",
+                "You're doing so great! You make {role}'s heart so full~"
             ],
             "negative": [
                 "{role} believes in you~",
@@ -37,7 +40,9 @@
                 "does {role}'s little {affectionate_term} need a bit of a break~?",
                 "oops~! {role} loves you anyways~",
                 "try again for {role}, {affectionate_term}~",
-                "don't worry, {role} knows you can do it~"
+                "don't worry, {role} knows you can do it~",
+                "it's okay, {role} knows {pronoun} little {affection_term} can do it next time...",
+                "take a break for {role} if you need it {affection_term}~"
             ],
             "overflow": [
                 "{role} has executed too many times and needs to take a nap~"
@@ -82,7 +87,9 @@
                 "*drags {pronoun} nail along your cheek*\nsuch a good {affectionate_term}~",
                 "*bites {pronoun} lip*\nmhmm~",
                 "give {role} a kiss~",
-                "*heavy breathing against your neck*"
+                "*heavy breathing against your neck*",
+                "yes... keep going for {role}~",
+                "mmhmm~\nyou're doing such a good job for {role}~"
             ],
             "negative": [
                 "you're so cute when you're flustered~",
@@ -93,7 +100,9 @@
                 "you need to work harder to please {role}~",
                 "gosh you must be flustered~",
                 "are you just keysmashing now~?\ncute~",
-                "is {role}'s little {affectionate_term} having trouble reaching the keyboard~?"
+                "is {role}'s little {affectionate_term} having trouble reaching the keyboard~?",
+                "{role}'s starting to think {pronoun} little {affection_term} likes being punished...",
+                "if {role}'s little {affectionate_term} wanted punishing, they could have just asked..."
             ],
             "overflow": [
                 "you've been a bad little {affectionate_term} and worn out {role}~"
@@ -115,6 +124,9 @@
                 "open wide {denigrating_term}.\nyou've earned {role}'s {part}~",
                 "do you want {role}'s {part}?\nkeep this up and you'll earn it~",
                 "oooh~ what a good {denigrating_term} you are~"
+                "that's right, {denigrating_term}~\njust like that~~",
+                "mmhmmm {role} thinks {pronoun} knows how to reward you for this...\nopen wide {denigrating_term}~"
+
             ],
             "negative": [
                 "you filthy {denigrating_term}~\nyou made a mess, now clean it up~\nwith your tongue~",
