@@ -279,7 +279,7 @@
             "env_key": "BEG_HALF_LIFE"
         },
         "beg_stubborn_chance": {
-            "defaults": ["10"],
+            "defaults": ["15"],
             "env_key": "BEG_STUBBORN_CHANCE"
         }
     }

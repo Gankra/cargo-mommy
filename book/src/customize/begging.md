@@ -47,7 +47,7 @@ Mommy will consider the following environmental variables~
     * **Example:** A value of 300 (5 minutes), will allow the next non-beg a 74% chance of passing at 2 minutes, 50% at 5 minutes, and 25% at 10 minutes.
 * `CARGO_MOMMYS_BEG_STUBBORN_CHANCE` 😾
     * If you fail to beg when asked, then this is the percent chance that Mommy will hold a grudge and each subsequent beg might not be good enough. After a beg is finally good enough, the grudge ends.
-    * **Default:** 20
+    * **Default:** 15
 
 ## Customize your Begging Trigger
 
@@ -57,7 +57,7 @@ You can tell Mommy that you're begging in a round-about way by touching or updat
 
 For example, you could set up an AutoHotKey script to a macro button on your keyboard, or write your own code or process to drive the file from other real-world interactions.
 
-Note that a recent beg detected this way only counts as a single lowercase `please`. If Mommy is being especially  stubborn 😾, the best way to break out of her grudge might be a proper and direct `cargo mommy please PLEASE PLEASE`.
+Note that a recent beg detected this way only counts as a single lowercase `please`. If Mommy is being especially stubborn 😾, the best way to break out of her grudge might be a proper and direct `cargo mommy please PLEASE PLEASE`.
 
 
 ## I want to Stop Begging
