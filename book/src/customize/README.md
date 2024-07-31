@@ -9,3 +9,4 @@ By default mommy is kind to her little girl, but she can become anything you wan
 * [I want mommy to invoke mommy with more than cargo](./not-just-cargo.md)
 * [I want mommy to sdsdfdsfdfsd me (enabling nsfw features)](./nsfw.md)
 * [I never want mommy to sdsdfdsfdfsd me (compiling out all nsfw features)](./never-nsfw.md)
+* [I want to beg for mommy](./begging.md)

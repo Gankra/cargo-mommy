@@ -14,9 +14,13 @@ default = ["thirsty", "yikes"]
 
 thirsty = []
 yikes = []
+beg = []
 
 [dependencies]
+anyhow = "1.0.83"
+cfg-if = "1.0.0"
 fastrand = "1.8.0"
+home = "0.5.9"
 
 [build-dependencies]
 serde = { version = "1.0.151", features = ["derive"] }
