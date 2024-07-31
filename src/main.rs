@@ -1,13 +1,24 @@
 #![allow(clippy::let_and_return)]
 
-use fastrand::Rng;
+#[cfg(feature = "beg")]
+mod beg;
+
 use std::env;
 use std::io::IsTerminal;
+use fastrand::Rng;
 
+#[derive(Copy, Clone)]
 enum ResponseType {
     Positive,
     Negative,
     Overflow,
+
+    #[cfg(feature = "beg")]
+    FirstBeg,
+    #[cfg(feature = "beg")]
+    DidNotBeg,
+    #[cfg(feature = "beg")]
+    MustBegMore,
 }
 
 /// Mommy intentionally lets her little ones call her recursively, since they might want to hear more from her~
@@ -94,10 +105,94 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     // if we don't do this, we'll infinitely recurse into ourselves by re-calling "cargo mommy"!
     // (note that it *is* supported to do `cargo mommy mommy` and get two messages, although I
     // believe we do this, `cargo-mommy mommy` will still only get you one message).
+    //
+    // Contiguous mommies are consolidated in-place (as follows), but interspersed mommies can
+    // still be handled recursively (as above). For example, "cargo mommy vibe mommy mommy"
+    // will consolidate 1+1 contiguously and 1+2 recursively.
+    //
+    // Invoking "MOMMY" in all caps counts as two normal invocations of lowercase "mommy".
+    //
+    // Begging can be a little finicky. Without consolidation, "cargo mommy mommy please"
+    // would provide begging to the inner mommy, but might be rejected for a lack of begging
+    // by the outer mommy (before the inner mommy can even run). With consolidation, this is not an
+    // issue. However, this problem can still be triggered by evading consolidation and using
+    // recursion instead. For example, "cargo mommy vibe mommy please" will have an outer mommy
+    // that cannot see the begging for inner mommy. In any case, these should work with no
+    // begging confusion, whether by consolidation or ordered begging in recursion:
+    // - "cargo mommy please vibe mommy"
+    // - "cargo mommy please mommy vibe"
+    // - "cargo mommy mommy please vibe"
 
-    if arg_iter.peek().map_or(false, |arg| arg == &true_role) {
+    let mut mommy_count = 0usize;
+    let mut peek = arg_iter.peek();
+    while let Some(arg) = peek {
+        if arg.to_lowercase() == true_role {
+            mommy_count += 1;
+            if arg == &true_role.to_uppercase() {
+                mommy_count += 1;
+            }
+        } else {
+            break;
+        }
         let _ = arg_iter.next();
+        peek = arg_iter.peek();
     }
+    let mommy_count = mommy_count.max(1usize).min(RECURSION_LIMIT as usize) as u8;
+
+    // mommy will attempt to parse your input as an integer~
+    // but if you provide nonsense you'll get punished~
+
+    #[cfg(feature = "beg")]
+    let beg_half_life: u16 = BEG_HALF_LIFE
+        .load(&true_role, &rng)?
+        .trim()
+        .parse()
+        .unwrap_or_else(|err: std::num::ParseIntError| match err.kind() {
+            std::num::IntErrorKind::PosOverflow => u16::MAX,
+            std::num::IntErrorKind::NegOverflow => 0,
+            _ => 600,
+        });
+
+    #[cfg(feature = "beg")]
+    let beg_stubborn_chance: u8 = BEG_STUBBORN_CHANCE
+        .load(&true_role, &rng)?
+        .trim()
+        .parse()
+        .unwrap_or_else(|err: std::num::ParseIntError| match err.kind() {
+            std::num::IntErrorKind::PosOverflow => 100,
+            std::num::IntErrorKind::NegOverflow => 0,
+            _ => 20,
+        });
+
+    // Sometimes mommy will decide to make you beg. So we have to check to make sure that if we
+    // are to pop that argument off. But also note that it can be ok to beg if not required~
+    //
+    // Mommy also makes sure not to break anyone who wants to use a real tool called "cargo
+    // please" if set to zero.
+
+    #[cfg(feature = "beg")]
+    let begging = if beg_half_life == 0 {
+        u8::MAX
+    } else {
+        let normal_please = "please".to_string();
+        let desperate_please = normal_please.to_uppercase();
+
+        let mut begging_count = 0usize;
+        let mut peek = arg_iter.peek();
+        while let Some(arg) = peek {
+            if arg.to_lowercase() == normal_please {
+                begging_count += 1;
+                if arg.to_string() == desperate_please {
+                    begging_count += 1;
+                }
+            } else {
+                break;
+            }
+            let _ = arg_iter.next();
+            peek = arg_iter.peek();
+        }
+        begging_count.min(u8::MAX as usize) as u8
+    };
 
     // *WHEEZES*
     //
@@ -157,25 +252,82 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
         }
     }
 
-    // Time for mommy to call cargo~
-    let mut cmd = std::process::Command::new(&cargo);
-    cmd.args(args)
-        .env(RECURSION_LIMIT_VAR, new_limit.to_string());
-    let status: std::process::ExitStatus = cmd.status().map_err(|err: std::io::Error| {
-        format!("{true_role} tried looking everywhere, but did not find `{cargo}`: {err}",)
-    })?;
-    let code = status.code().unwrap_or(1);
-    if is_quiet_mode_enabled(cmd.get_args()) {
-        return Ok(code);
+    // mommy probably shouldn't be too smart with file system errors
+    #[cfg(feature = "beg")]
+    let mut maybe_beg = match beg::check_need_beg(&rng, begging, beg_half_life, beg_stubborn_chance) {
+        Err(err) => {
+            eprintln!(
+                "\x1b[1m{} fought against the file system and lost~\x1b[0m",
+                ROLE.load(&true_role, &rng)?
+            );
+            Err(err)?
+        }
+        Ok(beg) => beg,
+    };
+
+    #[allow(unused_mut, unused_assignments)]
+    let mut beg_needed = false;
+    #[cfg(feature = "beg")]
+    {
+        beg_needed = maybe_beg.is_needed();
     }
 
-    // Time for mommy to tell you how you did~
-    let response = if status.success() {
-        select_response(&true_role, &rng, ResponseType::Positive)
+    let (response_kind, code) = if beg_needed {
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "beg")] {
+                // uh oh, someone isn't begging like they need to~
+                match maybe_beg.needs {
+                    beg::NeedsBeg::Needed(beg::BegKind::RequestFirstBeg) => (ResponseType::FirstBeg, 69),
+                    beg::NeedsBeg::Needed(beg::BegKind::EnforceFirstBeg) => (ResponseType::DidNotBeg, 69),
+                    beg::NeedsBeg::Needed(beg::BegKind::RequestBegMore) => (ResponseType::MustBegMore, 69),
+                    beg::NeedsBeg::NotNeeded => unreachable!(
+                        "mommy cannot reach this case~ someone did something naughty and needs a spanking~"
+                    ),
+                }
+            } else {
+                unreachable!("mommy cannot reach this case~ begging is disabled")
+            }
+        }
     } else {
-        select_response(&true_role, &rng, ResponseType::Negative)
+        // Can add handling for if they are begging at the first required beg.
+        // Because that means they are begging more than they need to.
+        //
+        // This could be good or bad. Depending on mommy's mood.
+        #[cfg(feature = "beg")]
+        if let Err(err) = maybe_beg.remove_lock() {
+            eprintln!(
+                "\x1b[1m{} fought against the file system and lost~\x1b[0m",
+                ROLE.load(&true_role, &rng)?
+            );
+            Err(err)?
+        };
+
+        // Time for mommy to call cargo~
+        let mut cmd = std::process::Command::new(&cargo);
+        cmd.args(args)
+            .env(RECURSION_LIMIT_VAR, (new_limit + mommy_count).to_string());
+        let status: std::process::ExitStatus = cmd.status().map_err(|err: std::io::Error| {
+            format!("{true_role} tried looking everywhere, but did not find `{cargo}`: {err}", )
+        })?;
+        let code = status.code().unwrap_or(1);
+        if is_quiet_mode_enabled(cmd.get_args()) {
+            return Ok(code);
+        }
+
+        let rt = if status.success() {
+            ResponseType::Positive
+        } else {
+            ResponseType::Negative
+        };
+        (rt, code)
     };
-    pretty_print(response);
+
+    // Time for mommy to tell you how you did~
+    let mut mommy_count = mommy_count;
+    while mommy_count > 0 {
+        pretty_print(select_response(&true_role, &rng, response_kind));
+        mommy_count -= 1;
+    }
 
     Ok(code)
 }
@@ -230,6 +382,13 @@ fn select_response(
         ResponseType::Positive => group.positive,
         ResponseType::Negative => group.negative,
         ResponseType::Overflow => group.overflow,
+
+        #[cfg(feature = "beg")]
+        ResponseType::FirstBeg => group.beg_first,
+        #[cfg(feature = "beg")]
+        ResponseType::DidNotBeg => group.did_not_beg,
+        #[cfg(feature = "beg")]
+        ResponseType::MustBegMore => group.must_beg_more,
     };
     let response = &responses[rng.usize(..responses.len())];
 
@@ -284,6 +443,12 @@ struct Mood<'a> {
     positive: &'a [&'a [Chunk<'a>]],
     negative: &'a [&'a [Chunk<'a>]],
     overflow: &'a [&'a [Chunk<'a>]],
+    #[cfg(feature = "beg")]
+    beg_first: &'a [&'a [Chunk<'a>]],
+    #[cfg(feature = "beg")]
+    did_not_beg: &'a [&'a [Chunk<'a>]],
+    #[cfg(feature = "beg")]
+    must_beg_more: &'a [&'a [Chunk<'a>]],
 }
 
 enum Chunk<'a> {

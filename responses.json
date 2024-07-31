@@ -41,6 +41,27 @@
             ],
             "overflow": [
                 "{role} has executed too many times and needs to take a nap~"
+            ],
+            "beg_first": [
+                "ask nicely~",
+                "say the magic word for {role}~",
+                "remember {affectionate_term}, what do we say~?",
+                "{role} loves {pronoun} polite and respectful {affectionate_term} most of all~",
+                "not right now, {affectionate_term}. ...or is it important?"
+            ],
+            "did_not_beg": [
+                "you're a good {affectionate_term}, but you need to try a bit harder~",
+                "{role} thinks you should put some more effort in to asking~",
+                "mind your p's and q's~"
+            ],
+            "must_beg_more": [
+                "say the magic word for {role}~",
+                "you're a good {affectionate_term}, but you need to try a bit harder~",
+                "{role} thinks you should put some more effort in to asking~",
+                "oh {affectionate_term}, {role} was so distracted, can you ask again?",
+                "that's so very sweet, {affectionate_term}. Would you ask again, just for {role}~?",
+                "{role} loves {pronoun} sweet little {affectionate_term}'s good manners... Show {role} again~?",
+                "{role} appreciates {pronoun} {affectionate_term} doing as asked, but you have to really mean it~"
             ]
         },
         "ominous": {
@@ -56,6 +77,27 @@
             ],
             "overflow": [
                 "THOU HAST DRUNK TOO DEEPLY OF THE FONT"
+            ],
+            "beg_first": [
+                "{role}'s {affectionate_term} could be a bit nicer",
+                "perhaps you forgot that {role} must be treated with respect?",
+                "mind the disparity between {role} and {pronoun} {affectionate_term}",
+                "{role} taught {pronoun} {affectionate_term} better manners than this"
+            ],
+            "did_not_beg": [
+                "ask {pronoun} nicer or {role} will show you fear",
+                "maybe {role} should find a new {affectionate_term} who knows their place?",
+                "you are really testing {role}'s patience",
+                "sweet little {affectionate_term}, you underestimate {role}'s power here",
+                "{role} brought you this far, {role} can set you back",
+                "{affectionate_term}..."
+            ],
+            "must_beg_more": [
+                "{role} appreciates your respect. So much, in fact, that {role} wants more.",
+                "{role} is pleased to see {pronoun} {affectionate_term} knows their place. Please {role} more.",
+                "ohhh is {role}'s little {affectionate_term} afraid? it's okay... just keep asking {role} nicely and everything will be okay",
+                "hmm... sorry, did you say something?",
+                "you're making an effort, but it's not yet good enough for {role}. Say it like you mean it."
             ]
         },
 
@@ -97,6 +139,36 @@
             ],
             "overflow": [
                 "you've been a bad little {affectionate_term} and worn out {role}~"
+            ],
+            "beg_first": [
+                "{role} doesn't like your tone. Beg for {role}",
+                "{affectionate_term} sounds so cute when you beg for {role}~",
+                "if you begged for it {role} would be really happy and could give a treat~",
+                "begging makes {role} very happy~",
+                "did {role} hear something in your tone? Ask nicely~",
+                "{role} isn't ready yet, can you warm {pronoun} up?",
+                "remember {affectionate_term}, {role} only plays with NICE {affectionate_term}s~",
+                "{role} would appreciate it soooooo much if {pronoun} {affectionate_term} begged a little~",
+                "*bites {pronoun} lip*\nhow about you beg for it instead?",
+                "beg for {role}~\ndo it...\nbeg like the good little {affectionate_term} you are~",
+                "{role} just wants to see {pronoun} {affectionate_term} beg, first"
+            ],
+            "did_not_beg": [
+                "oh {affectionate_term}, {role} reeeaally wants to hear you beg~",
+                "come on {affectionate_term}, I have a treat right here~! come on~! beg~! beg~!",
+                "{role} could have swore {pronoun} {affectionate_term} was taught this trick...",
+                "is something wrong? {role} knows {pronoun} {affectionate_term} loves to beg~",
+                "oh {affectionate_term}, are you not in the mood? you make {role} sad..."
+            ],
+            "must_beg_more": [
+                "good {affectionate_term}~~!! beg some more, come on, beg~!",
+                "awwww that's a sweet {affectionate_term}~ beg some more, go on~!",
+                "who's a good {affectionate_term}~! who's a good {affectionate_term}~!",
+                "{role} looooves {pronoun} {affectionate_term}'s begging, beg some more~!",
+                "good {affectionate_term}~! keep begging, almost there {affectionate_term}~!",
+                "ohh {role} can tell {pronoun} {affectionate_term} reeally wants this~",
+                "*tugs your leash*\nyou can ask nicer~",
+                "*bites {pronoun} lip*\nyou're onto something~"
             ]
         },
 
@@ -119,7 +191,6 @@
             "negative": [
                 "you filthy {denigrating_term}~\nyou made a mess, now clean it up~\nwith your tongue~",
                 "*picks you up by the throat*\npathetic~",
-                "*drags {pronoun} claws down your back*\ndo it again~",
                 "*brandishes {pronoun} paddle*\ndon't make me use this~",
                 "{denigrating_term}.\n{denigrating_term}~\n{denigrating_term}~~",
                 "get on your knees and beg {role} for forgiveness you {denigrating_term}~",
@@ -134,6 +205,43 @@
             ],
             "overflow": [
                 "brats like you don't get to talk to {role}"
+            ],
+            "beg_first": [
+                "{role} will keep edging {pronoun} {denigrating_term} until they ask nicely",
+                "if you beg for it {role} could give you some {part}",
+                "beg, {denigrating_term}",
+                "{role} does not take kindly to insubordination, {denigrating_term}",
+                "That's not good enough for {role}. Get on your knees and beg.",
+                "Put your forehead to the floor and beg, {denigrating_term}",
+                "can {role} really do this for {pronoun} {denigrating_term}, unless {pronoun} foot is on {pronoun} {denigrating_term}'s head?"
+            ],
+            "did_not_beg": [
+                "get on your knees and beg {role} for forgiveness you {denigrating_term}~",
+                "{denigrating_term}s like you need to stay in line and watch their tone",
+                "bad {denigrating_term}s don't deserve it unless they beg",
+                "ha! hahahaha! You stupid {denigrating_term}... you have to beg~",
+                "That's another week in chastity, {denigrating_term}. Beg.",
+                "{denigrating_term}...",
+                "*brandishes {pronoun} paddle*\ndon't make me use this~"
+            ],
+            "must_beg_more": [
+                "try again, {denigrating_term}",
+                "hahaha! {role}'s little {denigrating_term} is starting to understand~",
+                "beg again, but kissing {role}'s feet this time",
+                "{role} adores how pathetic {pronoun} {denigrating_term} has become~",
+                "tell {role} how bad you REALLY need {pronoun} {part}",
+                "hehehe~ maybe {role} will just keep stringing {denigrating_term} along forever~",
+                "awww~ you must want {role}'s {part} sooooo baaad~",
+                "hmmm... does {role}'s little {denigrating_term} really mean it?",
+                "ew... you really are as pathetic as you look...",
+                "*takes screenshots*\nhahahaha!!!",
+                "don't get your hopes up, {denigrating_term}. If {role} lets you cum, it's ruined orgasm or nothing~",
+                "teheheh~ just wait until cmake-mommy hears about this",
+                "awww doesn't {role}'s little {denigrating_term} have a spine at all? How shameful~",
+                "some day {role}'s little {denigrating_term} will be responsible enough to cargo on their own. But not today~",
+                "okay, you can stop begging for {role} now~ noooo really~",
+                "*yanks your leash*\nhaha!! again, {denigrating_term}! again~!",
+                "*runs {pronoun} fingers through your hair*\nagain, but call yourself a {denigrating_term} this time~"
             ]
         }
     },
@@ -165,6 +273,14 @@
         "part": {
             "spiciness": "yikes",
             "defaults": ["milk"]
+        },
+        "beg_half_life": {
+            "defaults": ["0"],
+            "env_key": "BEG_HALF_LIFE"
+        },
+        "beg_stubborn_chance": {
+            "defaults": ["10"],
+            "env_key": "BEG_STUBBORN_CHANCE"
         }
     }
 }

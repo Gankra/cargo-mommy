@@ -1,6 +1,6 @@
 # Unreleased
 
-Nothing Yet!
+* mommy allows her users to [beg](https://github.com/Gankra/cargo-mommy/pull/87)
 
 
 # Version 0.3.1 (2023-11-20)

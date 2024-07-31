@@ -13,7 +13,8 @@
 use std::collections::BTreeMap;
 use std::env;
 use std::fmt::Write;
-use std::fs;
+use std::fs::File;
+use std::io::Write as FileWrite;
 use std::ops::Range;
 use std::path::Path;
 
@@ -50,7 +51,12 @@ struct Mood {
     positive: Vec<String>,
     negative: Vec<String>,
     overflow: Vec<String>,
-
+    #[cfg(feature = "beg")]
+    beg_first: Vec<String>,
+    #[cfg(feature = "beg")]
+    did_not_beg: Vec<String>,
+    #[cfg(feature = "beg")]
+    must_beg_more: Vec<String>,
     #[serde(default)]
     spiciness: Spiciness,
 }
@@ -87,6 +93,9 @@ fn main() {
     for (name, var) in config.vars.iter_mut() {
         if var.spiciness > Spiciness::CONFIGURED {
             continue;
+        }
+        if name.starts_with("beg") && !cfg!(feature = "beg") {
+            continue
         }
         var.index = i;
         i += 1;
@@ -150,6 +159,21 @@ fn main() {
         for response in &mood.overflow {
             parse_response(response, &mut responses)
         }
+        #[cfg(feature = "beg")]
+        {
+            let _ = write!(responses, "], beg_first: &[");
+            for response in &mood.beg_first {
+                parse_response(response, &mut responses)
+            }
+            let _ = write!(responses, "], did_not_beg: &[");
+            for response in &mood.did_not_beg {
+                parse_response(response, &mut responses)
+            }
+            let _ = write!(responses, "], must_beg_more: &[");
+            for response in &mood.must_beg_more {
+                parse_response(response, &mut responses)
+            }
+        }
         let _ = write!(responses, "] }},");
     }
 
@@ -158,23 +182,29 @@ fn main() {
     let emote_idx = config.vars["emote"].index;
     let pronoun_idx = config.vars["pronoun"].index;
     let role_idx = config.vars["role"].index;
+    let beg_half_life_idx = config.vars["beg_half_life"].index;
+    let beg_stubborn_chance_idx = config.vars["beg_stubborn_chance"].index;
 
-    fs::write(
-        dest_path,
-        format!(
-            r"
-            static CONFIG: Config<'static> = Config {{
-                vars: &[{vars}],
-                moods: &[{responses}],
-            }};
-            static MOOD: &Var<'static> = &CONFIG.vars[{mood_idx}];
-            static EMOTE: &Var<'static> = &CONFIG.vars[{emote_idx}];
-            static PRONOUN: &Var<'static> = &CONFIG.vars[{pronoun_idx}];
-            static ROLE: &Var<'static> = &CONFIG.vars[{role_idx}];
-            "
-        ),
-    )
-    .unwrap();
+    let mut file = File::create(&dest_path).unwrap();
+    let f = format!(r"
+static CONFIG: Config<'static> = Config {{
+    vars: &[{vars}],
+    moods: &[{responses}],
+}};
+static MOOD: &Var<'static> = &CONFIG.vars[{mood_idx}];
+static EMOTE: &Var<'static> = &CONFIG.vars[{emote_idx}];
+static PRONOUN: &Var<'static> = &CONFIG.vars[{pronoun_idx}];
+static ROLE: &Var<'static> = &CONFIG.vars[{role_idx}];
+");
+    File::write_all(&mut file, f.as_bytes()).unwrap();
+
+    if cfg!(feature = "beg") {
+        let f = format!(r"
+static BEG_HALF_LIFE: &Var<'static> = &CONFIG.vars[{beg_half_life_idx}];
+static BEG_STUBBORN_CHANCE: &Var<'static> = &CONFIG.vars[{beg_stubborn_chance_idx}];
+");
+        File::write_all(&mut file, f.as_bytes()).unwrap();
+    }
 
     println!("cargo:rerun-if-changed=responses.json");
 }
