@@ -159,7 +159,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Time for mommy to call cargo~
     let mut cmd = std::process::Command::new(&cargo);
-    cmd.args(args)
+
+    cmd.args(args.clone())
         .env(RECURSION_LIMIT_VAR, new_limit.to_string());
     let status: std::process::ExitStatus = cmd.status().map_err(|err: std::io::Error| {
         format!("{true_role} tried looking everywhere, but did not find `{cargo}`: {err}",)
@@ -167,6 +168,21 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     let code = status.code().unwrap_or(1);
     if is_quiet_mode_enabled(cmd.get_args()) {
         return Ok(code);
+    }
+
+    // Mommy can tell you how old she is :D
+    if args.contains(&"-V".to_string()) || args.contains(&"--version".to_string()) {
+        print!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+        if let Some(c) = option_env!("CARGO_COMMIT_SHORT_HASH") {
+            print!(" ({}", c);
+
+            match option_env!("CARGO_COMMIT_DATE") {
+                Some(c) => print!(" {})", c),
+                None => print!(")"),
+            }
+        }
+
+        println!();
     }
 
     // Time for mommy to tell you how you did~
