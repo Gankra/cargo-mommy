@@ -29,7 +29,7 @@ fn main() {
 }
 
 fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
-    let rng = Rng::new();
+    let mut rng = Rng::new();
 
     let mut arg_iter = env::args().peekable();
 
@@ -69,7 +69,7 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
     if let Ok(limit) = env::var(RECURSION_LIMIT_VAR) {
         if let Ok(n) = limit.parse::<u8>() {
             if n > RECURSION_LIMIT {
-                let mut response = select_response(&true_role, &rng, ResponseType::Overflow);
+                let mut response = select_response(&true_role, &mut rng, ResponseType::Overflow);
                 match &mut response {
                     Ok(s) | Err(s) => {
                         *s += "\nyou didn't set CARGO to something naughty, did you?\n"
@@ -137,8 +137,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
                         if let Err(e) = std::fs::copy(bin_path, new_bin_path) {
                             Err(format!(
                                 "{role} couldn't copy {pronoun}self...\n{e:?}",
-                                role = ROLE.load(&true_role, &rng)?,
-                                pronoun = PRONOUN.load(&true_role, &rng)?,
+                                role = ROLE.load(&true_role, &mut rng)?,
+                                pronoun = PRONOUN.load(&true_role, &mut rng)?,
                             ))?
                         } else {
                             // Just exit immediately on success, don't try to get too clever here~
@@ -148,8 +148,8 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
                     } else {
                         Err(format!(
                             "{role} couldn't copy {pronoun}self...\n(couldn't find own parent dir)",
-                            role = ROLE.load(&true_role, &rng)?,
-                            pronoun = PRONOUN.load(&true_role, &rng)?,
+                            role = ROLE.load(&true_role, &mut rng)?,
+                            pronoun = PRONOUN.load(&true_role, &mut rng)?,
                         ))?;
                     }
                 }
@@ -171,9 +171,9 @@ fn real_main() -> Result<i32, Box<dyn std::error::Error>> {
 
     // Time for mommy to tell you how you did~
     let response = if status.success() {
-        select_response(&true_role, &rng, ResponseType::Positive)
+        select_response(&true_role, &mut rng, ResponseType::Positive)
     } else {
-        select_response(&true_role, &rng, ResponseType::Negative)
+        select_response(&true_role, &mut rng, ResponseType::Negative)
     };
     pretty_print(response);
 
@@ -205,7 +205,7 @@ fn is_quiet_mode_enabled(args: std::process::CommandArgs) -> bool {
 
 fn select_response(
     true_role: &str,
-    rng: &Rng,
+    rng: &mut Rng,
     response_type: ResponseType,
 ) -> Result<String, String> {
     // Choose what mood mommy is in~
@@ -263,7 +263,7 @@ impl Config<'_> {
         &self,
         true_role: &str,
         chunks: &[Chunk],
-        rng: &Rng,
+        rng: &mut Rng,
     ) -> Result<String, String> {
         let mut out = String::new();
         for chunk in chunks {
@@ -299,7 +299,7 @@ struct Var<'a> {
 impl Var<'_> {
     /// Loads this variable and selects one of the possible values for it;
     /// produces an in-character error message on failure.
-    fn load(&self, true_role: &str, rng: &Rng) -> Result<String, String> {
+    fn load(&self, true_role: &str, rng: &mut Rng) -> Result<String, String> {
         // try to load custom settings from env vars~
         let var = env::var(self.env(true_role));
         let split;
